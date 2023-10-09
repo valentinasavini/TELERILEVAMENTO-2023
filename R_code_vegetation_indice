@@ -1,0 +1,63 @@
+#  Calcolare l'indice spettrale
+
+library(raster)
+
+#setwd("~/lab/") # Linux
+setwd("C:/lab/") # Windows
+# setwd("/Users/name/Desktop/lab/") # Mac
+
+# Esercizio: importare defor1.png
+l1992 <- brick("defor1_.png")
+
+# Esercizio: plot l'immagine con plotRGB
+plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
+ 
+# Cos'è NIR?
+# NIR = 1
+# RED = 2
+# GREEN = 3
+
+# plotRGB(l1992, r=4, g=3, b=2, stretch="Lin")
+# export: 1, 2, 3
+
+# Esercizio: Calcolare DVI per il 1992 
+# DVI: NIR - RED
+dvi1992 = l1992[[1]] - l1992[[2]] 
+
+# creo scala colori da applicare
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
+plot(dvi1992, col=cl)
+
+# Impoetare l'immagine più recente
+l2006 <- brick("defor2_.png")
+plotRGB(l2006, 1, 2, 3, stretch="Lin")
+
+# Esercizio: plottare l'immagine del 1992 sopra e sotto quella del 2006
+par(mfrow=c(2,1))
+plotRGB(l1992, 1, 2, 3, stretch="Lin")
+plotRGB(l2006, 1, 2, 3, stretch="Lin")
+
+#- 2006
+dvi2006 = l2006[[1]] - l2006[[2]]
+plot(dvi2006, col=cl)
+
+# Multitemporal analysis
+difdvi = dvi1992 - dvi2006
+
+cld <- colorRampPalette(c('blue','white','red'))(100)
+plot(difdvi, col=cld)
+
+#--- NDVI 1992
+ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
+plot(ndvi1992, col=cl)
+
+ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
+plot(ndvi2006, col=cl)
+
+difndvi = ndvi1992 - ndvi2006
+plot(difndvi, col=cld) # noto che rosso diminuto perchè ha subito la deforestazione
+
+# 3 risoluzioni = 
+# radiometrica = numero di bit di una immagine
+# spaziale = dimensione pixel, 
+# spettrale = barre
