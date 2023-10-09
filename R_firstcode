@@ -1,0 +1,47 @@
+# Il primo codice su Git Hub
+
+# iniziamo a installare il pacchetto raster : utilizzato per scrivere, leggere, manipolare, analizzare e modellare dati spaziali
+
+# install.packages("raster")
+library(raster) 
+
+# Importare data e setterare la working directory
+#setwd("~/lab/") # Linux
+# setwd("/Users/emma/desktop/lab") #mac
+setwd("C:/lab/") # windows
+# funzione brick usata per racchiuddere tutte le informazioni ricavate dal satellite
+l2011 <- brick("p224r63_2011_masked.grd")
+
+# plot il data in una maniera casuare
+plot(l2011)
+# oggetti che assorbono il blu in basso, 
+# che riflettono il blu in alto e così via con altri colori
+# B4 infrarosso vicino
+
+# cambiamo la palette
+cl <- colorRampPalette(c("red","orange","yellow"))(100) # 100 sono le sfumature
+plot(l2011, col=cl) # rifaccio il plot cambiando la palette tramite col=
+
+# plottare solo un elemento
+plot(l2011[[4]], col=cl) # 4 è il NIR - infrarosso
+
+plot(l2011$B4_sre, col=cl) # un'altro modo 
+
+# oppure così
+nir <- l2011[[4]] # or: nir <- l2011$B4_sre
+plot(nir, col=cl)  
+
+# Esercizio: cambia la camma di colori per tutte le immagini
+cl <- colorRampPalette(c("cyan","azure","darkorchid","aquamarine"))(100) # 100 sono le sfumature
+plot(l2011, col=cl)
+
+# Esercizio: plotta la banda NIR
+plot(l2011[[4]], col= cl)
+plot(l2011$B4_sre, col=cl) # un'altro modo
+# perchè: 
+# b1=blue 
+# b2=green 
+# b3=red
+# b4=NIR
+
+dev.off() # per chiudere i grafici
