@@ -1,0 +1,99 @@
+#R_code_time_series
+#codice per importare e analizzare diverse immagini
+
+# LST = temperatura al suolo 
+
+#install.packages("raster")
+# install.packages("rasterVis")
+library(raster)
+# library(rasterVis)
+
+setwd("C:/lab/greenland")
+
+# 1. importo con funzione raster una immagine alla volta
+lst_2000 <- raster("lst_2000.tif")
+
+# Excercise: import all the data
+
+lst_2005 <- raster("lst_2005.tif")
+plot(lst_2005)
+
+lst_2010 <- raster("lst_2010.tif")
+plot(lst_2010)
+
+lst_2015 <- raster("lst_2015.tif")
+plot(lst_2015)
+
+# per vedere se sono stati caricati tutti
+ls()
+
+# 2.per importare in modo automatico 
+# creo lista
+rlist <- list.files(pattern = "lst") # pattern pezzo di nome comune a tutti
+# collego funzione alla lista con lapply 
+# lapply function (lista, funzione)
+import <- lapply(rlist, raster)
+# importa immagini tutti insieme
+TGr <- stack(import)
+TGr
+plot(TGr) #plotto 
+
+# RGB di alcuni dati - 
+plotRGB(TGr, 1, 2, 3, stretch="Lin")  # temperatura più alta nel 2000: rosso; 2005: verde; 2010: blu
+# temperatura più alta nella terza immagine perchè più blu
+plotRGB(TGr, 2, 3, 4, stretch="Lin") # temperatura più alta nel 2005: rosso; 2010: verde; 2015: blu
+plotRGB(TGr, 4, 3, 2, stretch="Lin") # temperatura più alta nel 2015: rosso; 2010: verde; 2005: blu
+
+# differenza 
+dift <- TGr[[2]] - TGr[[1]]
+plot(dift)
+
+# cambio legenda dei colori 
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+plot(TGr, col=cl) #
+
+#########
+## ESERCIZIO 2 - NO2 european
+#########
+
+library(raster)
+setwd("C:/lab/EN")
+
+#importing a file con funzione raster
+en_first <- raster("EN_0001.png")
+#creazione colorRampPalete
+cl <- colorRampPalette(c("red","orange","yellow"))(100)
+plot(en_first, cl)
+
+# lista file 
+enlist <- list.files(pattern="EN")
+enlist
+# importo
+import <- lapply(enlist, raster)
+import
+# do il colore
+TGr <- stack(import)
+TGr
+plot(TGr)
+#controllo che le immagini che ho riportato nella lista sia uguale alla prima riportata
+# check 1
+par(mfrow=c(1,2))
+plot(en_first, col= cl)
+plot(EN[[1]], col= cl)
+# check 2
+difcheck <- en_first - EN[[1]]
+difcheck 
+plot(difcheck) # tutto stesso colore
+
+# differenza tra dato inizio (gennaio) e fine (marzo pandemia
+par(mfrow=c(1,2))
+plot(en_first, col= cl)
+plot(EN[[13]], col= cl)
+# controllo 
+difen = EN[[1]] - EN[[13]]
+cldif <- colorRampPalette(c('blue', 'white', 'red'))(100)
+plot(difen, col = cldif) # zone rosse dove prima c'era molta produzione 
+
+plotRGB(en, r=1, g=7, b=13, stretch="lin")
+plotRGB(en, r=1, g=7, b=13, stretch="hist")
+# valori rossi gennaio, valori verdi febbraio, valori blu marzo (valori più alti)
