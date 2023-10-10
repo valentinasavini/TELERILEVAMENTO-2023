@@ -1,99 +1,100 @@
-#R_code_time_series
-#codice per importare e analizzare diverse immagini
+# R_code_time _series
 
-# LST = temperatura al suolo 
-
-#install.packages("raster")
-# install.packages("rasterVis")
+install.packages("raster")
+#install.packages("rasterVis")
 library(raster)
 # library(rasterVis)
 
+#imposto workdirectory
 setwd("C:/lab/greenland")
 
-# 1. importo con funzione raster una immagine alla volta
+### ESERCIZIO 1
+#importo dati
+# METODO 1
 lst_2000 <- raster("lst_2000.tif")
-
-# Excercise: import all the data
-
 lst_2005 <- raster("lst_2005.tif")
-plot(lst_2005)
-
 lst_2010 <- raster("lst_2010.tif")
-plot(lst_2010)
-
 lst_2015 <- raster("lst_2015.tif")
+
+#plotto 
+par(mfrow=c(2,2))
+plot(lst_2000)
+plot(lst_2005)
+plot(lst_2010)
 plot(lst_2015)
 
-# per vedere se sono stati caricati tutti
-ls()
-
-# 2.per importare in modo automatico 
-# creo lista
-rlist <- list.files(pattern = "lst") # pattern pezzo di nome comune a tutti
-# collego funzione alla lista con lapply 
-# lapply function (lista, funzione)
-import <- lapply(rlist, raster)
-# importa immagini tutti insieme
+# METODO 2
+# list.files, lapply, stack
+# creo lisra
+rlist <- list.files(pattern="lst")
+rlist
+# collego lista a funzione
+import <- lapply(rlist,raster)
+import
+# do colore
 TGr <- stack(import)
 TGr
-plot(TGr) #plotto 
-
-# RGB di alcuni dati - 
-plotRGB(TGr, 1, 2, 3, stretch="Lin")  # temperatura più alta nel 2000: rosso; 2005: verde; 2010: blu
-# temperatura più alta nella terza immagine perchè più blu
-plotRGB(TGr, 2, 3, 4, stretch="Lin") # temperatura più alta nel 2005: rosso; 2010: verde; 2015: blu
-plotRGB(TGr, 4, 3, 2, stretch="Lin") # temperatura più alta nel 2015: rosso; 2010: verde; 2005: blu
+plot(TGr)
+# cambio colori 
+plotRGB(TGr, 1, 2, 3, stretch="Lin")
+plotRGB(TGr, 2, 3, 4, stretch="Lin")
+plotRGB(TGr, 4, 3, 2, stretch="Lin")
 
 # differenza 
 dift <- TGr[[2]] - TGr[[1]]
 plot(dift)
 
-# cambio legenda dei colori 
+# levelplot(TGr)
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
-plot(TGr, col=cl) #
+plot(TGr, col=cl)
 
-#########
-## ESERCIZIO 2 - NO2 european
-#########
+### ESERCIZIO 2: NO2 decrease during the lockdown period
 
 library(raster)
-setwd("C:/lab/EN")
+setwd("C:/lab/en")
 
-#importing a file con funzione raster
-en_first <- raster("EN_0001.png")
-#creazione colorRampPalete
-cl <- colorRampPalette(c("red","orange","yellow"))(100)
-plot(en_first, cl)
+# importo due immagini 
+en01 <- raster("EN_0001.png")
+cl <- colorRampPalette(c('red','orange','yellow'))(100) #
+plot(en01, col=cl)
 
-# lista file 
-enlist <- list.files(pattern="EN")
-enlist
-# importo
-import <- lapply(enlist, raster)
-import
-# do il colore
-TGr <- stack(import)
-TGr
-plot(TGr)
+en13 <- raster("EN_0013.png")
+plot(en13, col=cl)
+
 #controllo che le immagini che ho riportato nella lista sia uguale alla prima riportata
 # check 1
 par(mfrow=c(1,2))
-plot(en_first, col= cl)
-plot(EN[[1]], col= cl)
+plot(en01, col= cl)
+plot(en[[1]], col= cl)
 # check 2
-difcheck <- en_first - EN[[1]]
+difcheck <- en01 - en[[1]]
 difcheck 
-plot(difcheck) # tutto stesso colore
+plot(difcheck)  #un colore check OK
 
-# differenza tra dato inizio (gennaio) e fine (marzo pandemia
+# Exercise: import the whole as in the Greenland example
+# by the following steps: list.files, lapply, stack
+
+rlist <- list.files(pattern = "EN")
+rimp <- lapply(rlist, raster)
+en <- stack(rimp)
+plot(en, col=cl)
+
+# Exercise: plot EN01 besides EN13 (inizio e fine pandemia)
 par(mfrow=c(1,2))
-plot(en_first, col= cl)
-plot(EN[[13]], col= cl)
-# controllo 
-difen = EN[[1]] - EN[[13]]
-cldif <- colorRampPalette(c('blue', 'white', 'red'))(100)
-plot(difen, col = cldif) # zone rosse dove prima c'era molta produzione 
+plot(en[[1]], col=cl)
+plot(en[[13]], col=cl)
 
+# or:
+en113 <- stack(en[[1]], en[[13]])
+plot(en113, col=cl)
+
+
+# let's make the difference:
+difen <-  en[[1]] - en[[13]]
+cldif <- colorRampPalette(c('blue','white','red'))(100) #
+plot(difen, col=cldif) # zone rosse dove prima c'era molta produzione 
+
+# plotRGB of three files together
 plotRGB(en, r=1, g=7, b=13, stretch="lin")
 plotRGB(en, r=1, g=7, b=13, stretch="hist")
 # valori rossi gennaio, valori verdi febbraio, valori blu marzo (valori più alti)
