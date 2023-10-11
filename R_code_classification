@@ -1,0 +1,74 @@
+# R code classification
+
+# TEORIA:
+# pixel di vegetazione, all'interno del grafico bidimensionale
+# alti valori di infrarosso e bassi valori di infrarosso
+# perchè vegetazione : 
+# pixel di acqua che assorbe tutto l'infrarosso
+# alti valori di infrarosso e bassi valori di rosso
+# pixel ?
+# vado a misurare la distanza tra classe acqua e vegetazione
+
+
+install.packages("Rstoolbox")
+library(raster)
+library(Rstoolbox) #libreria per le analisi da gestione di dati satellitali
+# set work directory
+setwd("C:/lab/")
+# data import
+so <- brick("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
+
+plotRGB(so, 1, 2, 3, stretch="lin")
+plotRGB(so, 1, 2, 3, stretch="hist")
+
+# CLASSIFICARE I DATI DEL SOLE
+
+# https://rspatial.org/raster/rs/4-unsupclassification.html
+# organizzati dati in 3 classi (=livelli di energia)
+
+# 1. Trasformare l'immagine in serie di valori continui con funzione
+# getValues
+
+singlenr <- getValues(so)
+singlenr
+# prende ogni singolo pixel di immagine e o rimette in forma tabellare
+#set.seed(99)
+
+# 2. Classificazione con funzione:
+# kmeans
+
+kcluster <- kmeans(singlenr, centers = 3) #k=3
+kcluster
+# clustering : raggruppare pixel basandosi su delle classi
+# means: medie
+# k: tot
+
+# per ogni nuvola uso la media delle x e y (=centroide)
+# misuro solo la distanza dal centroide al punto in incognito
+# > distanza dal centroide < possibilità che faccia parte di quel gruppo
+# quindi means= centroide e k= classi
+
+# 3. Riassegnare le classi a un nuovo raster con funzione:
+# setValues
+soclass <- setValues(so[[1]], kcluster$cluster) # assign new values to a raster object
+# assegnare nuovi valori al raster
+
+cl <- colorRampPalette(c('yellow','black','red'))(100)
+plot(soclass, col=cl)
+
+# calcolo la percentuale di pixel delle diverse energi
+frequencies <- freq(soclass)
+frequencies
+# calcolo percentuale
+soclass # n pixel= 2221440
+tot = 2221440
+percentages =  frequencies * 100 / tot
+percentages
+
+# classe 1 livello energetico più alto (giallo) : 21.2%
+# classe 2 livello energetico medio (nero) : 41.4%
+# classe 3 livello energetico più basso (rosso): 37.3%
+
+# classificazione non supervisionata perchè non dicidiamo noi il livello energetico
+# più alto o più basso
+
