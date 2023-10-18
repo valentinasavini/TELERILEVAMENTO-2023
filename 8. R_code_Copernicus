@@ -1,1 +1,51 @@
+# R_code_Copernicus
+# come scaricare immagini da Copernicus e utilzzarle in R
 
+# Installare pacchetti di interesse
+install.packages("ncdf4")
+library(ncdf4)
+library(raster)
+library(ggplot2)
+library(viridis)
+
+
+# Impostare working directory
+setwd("C:/lab/")
+
+# register and download data from:
+# https://land.copernicus.vgt.vito.be/PDF/portal/Application.html
+
+# metadato: descrizione del dato
+# scarica quello con estensione .nc
+# dataset: c_gls_BA300-SeasonEventDatabase_202205310000_GLOBE_S3_V1.2.1.nc
+# carico su R
+
+sc <- raster("c_gls_NDVI300_202306010000_GLOBE_OLCI_V2.0.1.nc")
+plot(sc) # vedo l'immagine
+
+# Tagliare 
+ext <- c(23, 30, 62, 68) #x massima e minima longitudine, y massima e minima latitudine
+sc.crop <- crop(sc, ext) #funzione che chiede dato ed estensione
+plot(sc.crop)
+
+# da dato raster a dato continuo tabellare
+scd <- as.data.frame(sc.crop, xy=T)
+head(scd) #vedi prime sei righe
+
+ggplot() +
+  geom_raster(scd, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333m)) +
+  ggtitle("Normalized.Difference.Vegetation.Index.333m")
+
+## ESERCIZIO
+#esercizio: plot via ggplot the cropped image
+sc.crop.d <- as.data.frame(sc.crop, xy= T)
+head(sc.crop.d)
+names(sc.crop.d)
+ggplot() +
+  geom_raster(sc.crop.d,mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333m)) +
+  ggtitle("cropped soil moisture from Copernicus"))+
+  scale_fill_viridis(option="cividis")
+ggplot() +
+  geom_raster(sc.crop.d,mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333m)) +
+  ggtitle("cropped soil moisture from Copernicus")) +
+  scale_fill_viridis(option="cropped soil moisture from Copernicus")
