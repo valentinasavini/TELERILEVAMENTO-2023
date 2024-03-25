@@ -1,9 +1,11 @@
-# R_code_time _series
+# R_code_time _series 
+# Time series analysis 
 
+#installare i pacchetti 
 install.packages("raster")
-#install.packages("rasterVis")
+install.packages("rasterVis")
 library(raster)
-# library(rasterVis)
+library(rasterVis)
 
 #imposto workdirectory
 setwd("C:/lab/greenland")
@@ -22,6 +24,7 @@ plot(lst_2000)
 plot(lst_2005)
 plot(lst_2010)
 plot(lst_2015)
+dev.off()
 
 # METODO 2
 # list.files, lapply, stack
@@ -31,70 +34,78 @@ rlist
 # collego lista a funzione
 import <- lapply(rlist,raster)
 import
-# do colore
+# unisco insieme
 TGr <- stack(import)
 TGr
+# plot
 plot(TGr)
 # cambio colori 
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 plotRGB(TGr, 2, 3, 4, stretch="Lin")
 plotRGB(TGr, 4, 3, 2, stretch="Lin")
 
-# differenza 
+# differenza (2005-2000)
 dift <- TGr[[2]] - TGr[[1]]
 plot(dift)
 
-# levelplot(TGr)
+# cambio colore
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 plot(TGr, col=cl)
+dev.off()
 
-### ESERCIZIO 2: NO2 decrease during the lockdown period
+### ESERCIZIO 2: 
+#NO2 dimuisce durante il lperiodo del lockdown
 
+# Installo e imposto working directory
 library(raster)
 setwd("C:/lab/en")
 
-# importo due immagini 
-en01 <- raster("EN_0001.png")
-cl <- colorRampPalette(c('red','orange','yellow'))(100) #
-plot(en01, col=cl)
+#metodo 1
+# Importo due immagini 
+EN01 <- raster("EN_0001.png")
+EN13 <- raster("EN_0013.png")
 
-en13 <- raster("EN_0013.png")
-plot(en13, col=cl)
+# creo palette
+cl <- colorRampPalette(c('red','orange','yellow'))(100) 
 
-#controllo che le immagini che ho riportato nella lista sia uguale alla prima riportata
-# check 1
-par(mfrow=c(1,2))
-plot(en01, col= cl)
-plot(en[[1]], col= cl)
-# check 2
-difcheck <- en01 - en[[1]]
-difcheck 
-plot(difcheck)  #un colore check OK
+# plot
+par(mfrow=c(2,1))
+plot(EN01, col=cl)
+plot(EN13, col=cl)
 
-# Exercise: import the whole as in the Greenland example
-# by the following steps: list.files, lapply, stack
+# metodo 2: importo tutto come nell'esercizio 1
+# seguendo step: list.files, lapply, stack
 
 rlist <- list.files(pattern = "EN")
 rimp <- lapply(rlist, raster)
 en <- stack(rimp)
 plot(en, col=cl)
 
-# Exercise: plot EN01 besides EN13 (inizio e fine pandemia)
+# controllo che le immagini che ho riportato nella lista sia uguale alla prima riportata
+# check 1
+par(mfrow=c(1,2))
+plot(EN01, col= cl)
+plot(en[[1]], col= cl)
+# check 1
+difcheck <- EN01 - en[[1]]
+difcheck 
+plot(difcheck) #un colore check OK
+
+# Exercise: plot EN01 e EN13 (inizio e fine pandemia)
 par(mfrow=c(1,2))
 plot(en[[1]], col=cl)
 plot(en[[13]], col=cl)
 
-# or:
+# o usando stack():
 en113 <- stack(en[[1]], en[[13]])
 plot(en113, col=cl)
 
-
-# let's make the difference:
+# vediamo le differenze:
 difen <-  en[[1]] - en[[13]]
-cldif <- colorRampPalette(c('blue','white','red'))(100) #
+cldif <- colorRampPalette(c('blue','white','red'))(100) 
 plot(difen, col=cldif) # zone rosse dove prima c'era molta produzione 
 
-# plotRGB of three files together
+# plotRGB 
 plotRGB(en, r=1, g=7, b=13, stretch="lin")
 plotRGB(en, r=1, g=7, b=13, stretch="hist")
 # valori rossi gennaio, valori verdi febbraio, valori blu marzo (valori più alti)
