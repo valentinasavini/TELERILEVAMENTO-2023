@@ -3,46 +3,153 @@
 
 # iniziamo a installare il pacchetto raster : utilizzato per scrivere, leggere, manipolare, analizzare e modellare dati spaziali
 
-# install.packages("raster")
-library(raster) 
+# Installare pacchetto raster
+#install.packages("raster")
+library(raster)
 
-# Importare data e setterare la working directory
-#setwd("~/lab/") # Linux
-# setwd("/Users/emma/desktop/lab") #mac
-setwd("C:/lab/") # windows
-# funzione brick usata per racchiuddere tutte le informazioni ricavate dal satellite
-l2011 <- brick("p224r63_2011_masked.grd")
+# Setto la working directory
+setwd("C:/lab")
 
-# plot il data in una maniera casuare
-plot(l2011)
-# oggetti che assorbono il blu in basso, 
-# che riflettono il blu in alto e così via con altri colori
-# B4 infrarosso vicino
+# Funzione Brick per importare dati
+image_2011 <- brick("p224r63_2011_masked.grd")
+image_2011  # ncell = pixel totali
+# un RasterBrick è un oggeto raster multi-layer  
 
-# cambiamo la palette
-cl <- colorRampPalette(c("red","orange","yellow"))(100) # 100 sono le sfumature
-plot(l2011, col=cl) # rifaccio il plot cambiando la palette tramite col=
+# Plot data in maniera casuale 
+plot(image_2011) # default legend
 
-# plottare solo un elemento
-plot(l2011[[4]], col=cl) # 4 è il NIR - infrarosso
+colors <- colorRampPalette(c("red", "orange", "yellow")) (100) # n° di sfumature
+colors_3 <- colorRampPalette(c("red", "orange", "yellow")) (3)
 
-plot(l2011$B4_sre, col=cl) # un'altro modo 
+# Plot con palette di colori scelte
+plot(image_2011, col = colors)
+plot(image_2011, col = colors_3) # meno dettagli = peggiore qualità dell'immagine
 
-# oppure così
-nir <- l2011[[4]] # or: nir <- l2011$B4_sre
-plot(nir, col=cl)  
+# Plot solo un elemento dell'immagine multi-layerimage
+plot(image_2011[[4]], col = colors)
 
-# Esercizio: cambia la camma di colori per tutte le immagini
-cl <- colorRampPalette(c("cyan","azure","darkorchid","aquamarine"))(100) # 100 sono le sfumature
-plot(l2011, col=cl)
+nir <- image_2011$B4_sre # un altro modo, con assegno
+plot(nir, col = colors)
+plot(nir, col = colors_3) 
 
-# Esercizio: plotta la banda NIR
-plot(l2011[[4]], col= cl)
-plot(l2011$B4_sre, col=cl) # un'altro modo
-# perchè: 
-# b1=blue 
-# b2=green 
-# b3=red
-# b4=NIR
+# Cambio palette
+new_palette <- colorRampPalette(c("aquamarine", "cadetblue", "cyan")) (100)
+plot(image_2011, col = new_palette)
+plot(image_2011[[4]], col = new_palette) 
 
-dev.off() # per chiudere i grafici
+# ESERCIZIO: plot banda NIR
+# b1 = blue
+# b2 = green
+# b3 = red
+# b4 = NIR
+
+# Creo una nuova palette colori 
+palette <- colorRampPalette(c("pink", "violet", "darkorchid4")) (100)
+
+# Plot la banda NIR in diffenti modi
+plot(image_2011$B4_sre, col = new_palette) #1
+plot(image_2011[[4]], col = palette) #2
+
+dev.off()  # per rimuovere multiframe
+
+# Funzione per esportare immagini
+pdf("my_1st_graph.pdf")
+plot(image_2011[[4]], col = palette) 
+dev.off()
+
+png("first.png")
+plot(image_2011[[4]], col = palette) 
+dev.off()
+
+
+# Funzione per plottare due o più grafici in un multiframe
+par(mfrow = c(2, 1))  # un multiframe con 2 righe e 1 colonna
+plot(image_2011[[3]], col = palette) #red
+plot(image_2011[[4]], col = palette) #NIR
+
+dev.off() 
+
+# Si notano le differenze tra le due palette
+par(mfrow = c(2, 1))
+plot(nir, col = colors) 
+plot(nir, col = colors_3)
+
+dev.off()
+
+# Tutte le bande
+par(mfrow = c(2, 2))
+
+# banda1
+col_blue <- colorRampPalette(c("blue4", "blue2", "lightblue"))(100)
+plot(image_2011[[1]], col = col_blue)
+
+# banda2
+col_green <- colorRampPalette(c("darkgreen", "green", "lightgreen"))(100)
+plot(image_2011[[2]], col = col_green)
+
+# banda3
+col_aquamarine <- colorRampPalette(c("aquamarine4", "aquamarine2", "aquamarine"))(100)
+plot(image_2011[[3]], col = col_aquamarine)
+
+# banda4
+col_pink <- colorRampPalette(c("pink", "violet", "darkorchid4"))(100)
+plot(image_2011[[4]], col = col_pink)
+
+
+# RGB plotting, plot of multi-layered raster object
+# 3 bands are combined such that they represent the red, green and blue channel
+# This function can be used to make 'true (or false) color images
+# from Landsat and other multi-band satellite images.
+
+# Blue = 1
+# Green = 2
+# Red = 3
+
+plotRGB(image_2011, r = 3, g = 2, b = 1, stretch = "Lin") # colori naturali
+plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin") # vegetazione è rossa
+plotRGB(image_2011, r = 3, g = 2, b = 4, stretch = "Lin") # vegetazione è blu
+plotRGB(image_2011, r = 3, g = 4, b = 2, stretch = "Lin") # vegetazione è verde
+# la quarta banda è la banda NIR, le piante rifrettono molto i NIR
+
+# Multiframe con naturali e falsi colori
+par(mfrow = c(2, 1))
+plotRGB(image_2011, r = 3, g = 2, b = 1, stretch = "Lin")  # colori naturali
+plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin")
+
+# Histogram stretching
+plotRGB(image_2011, r = 3, g = 2, b = 1, stretch = "Hist")  # colori naturali
+plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Hist")
+
+# Mixed stretching, differences between the 2 types of stretch
+plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin")
+plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Hist")
+
+dev.off()
+
+# Exercise: plot the NIR band
+plot(image_2011[[4]])
+
+# Importare l'immagine del 1988 
+image_1988 <- brick("p224r63_1988_masked.grd")
+plot(image_1988)
+
+# Plot in RGB  (colori naturali)
+plotRGB(image_1988, r = 3, g = 2, b = 1, stretch = "Lin")
+plotRGB(image_1988, r = 4, g = 3, b = 2, stretch = "Lin")
+
+plotRGB(image_1988, 4, 3, 2, stretch = "Lin")  # modalità accorciata 
+
+# Multiframe per vedere la differenza tra 1988 e 2011
+par(mfrow = c(2,1))
+plotRGB(image_1988, 4, 3, 2, stretch = "Lin")
+plotRGB(image_2011, 4, 3, 2, stretch = "Lin")
+
+dev.off()
+plotRGB(image_1988, 4, 3, 2, stretch = "Hist")  # histogram stretch
+
+# Multiframe con 4 immagini
+par(mfrow=c(2,2))
+plotRGB(image_1988, 4, 3, 2, stretch="Lin")
+plotRGB(image_2011, 4, 3, 2, stretch="Lin")
+plotRGB(image_1988, 4, 3, 2, stretch="Hist")
+plotRGB(image_2011, 4, 3, 2, stretch="Hist")
