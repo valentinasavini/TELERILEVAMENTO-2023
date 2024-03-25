@@ -1,19 +1,17 @@
-#R_code_vegetation_indices
-#  Calcolare l'indice spettrale
+# R_code_vegetation_indices
+# Calcolare l'indice spettrale
 
 library(raster)
+# Settare working directory
+setwd("C:/lab/")
 
-#setwd("~/lab/") # Linux
-setwd("C:/lab/") # Windows
-# setwd("/Users/name/Desktop/lab/") # Mac
-
-# Esercizio: importare defor1.png
+# Importare defor1.png
 l1992 <- brick("defor1_.png")
 
-# Esercizio: plot l'immagine con plotRGB
+# Plot l'immagine con plotRGB
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
  
-# Cos'è NIR?
+# Cos'è NIR? - NASA mette NIR nella prima banda
 # NIR = 1
 # RED = 2
 # GREEN = 3
@@ -29,7 +27,7 @@ dvi1992 = l1992[[1]] - l1992[[2]]
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
 plot(dvi1992, col=cl)
 
-# Impoetare l'immagine più recente
+# Importare l'immagine più recente
 l2006 <- brick("defor2_.png")
 plotRGB(l2006, 1, 2, 3, stretch="Lin")
 
@@ -48,7 +46,7 @@ difdvi = dvi1992 - dvi2006
 cld <- colorRampPalette(c('blue','white','red'))(100)
 plot(difdvi, col=cld)
 
-#--- NDVI 1992
+#--- NDVI 1992 
 ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
 plot(ndvi1992, col=cl)
 
