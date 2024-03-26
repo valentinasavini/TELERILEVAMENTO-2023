@@ -11,14 +11,14 @@ library(rasterVis)
 setwd("C:/lab/greenland")
 
 ### ESERCIZIO 1
-#importo dati
+# Importo dati
 # METODO 1
 lst_2000 <- raster("lst_2000.tif")
 lst_2005 <- raster("lst_2005.tif")
 lst_2010 <- raster("lst_2010.tif")
 lst_2015 <- raster("lst_2015.tif")
 
-#plotto 
+# plotto 
 par(mfrow=c(2,2))
 plot(lst_2000)
 plot(lst_2005)
@@ -28,7 +28,7 @@ dev.off()
 
 # METODO 2
 # list.files, lapply, stack
-# creo lisra
+# creo lista
 rlist <- list.files(pattern="lst")
 rlist
 # collego lista a funzione
@@ -89,7 +89,7 @@ plot(en[[1]], col= cl)
 # check 1
 difcheck <- EN01 - en[[1]]
 difcheck 
-plot(difcheck) #un colore check OK
+plot(difcheck) # un colore check OK
 
 # Exercise: plot EN01 e EN13 (inizio e fine pandemia)
 par(mfrow=c(1,2))
