@@ -1,4 +1,12 @@
 # R_code_vegetation_indices
+# Vegetational indices are mathematical combination or transformation of spectral bands that
+# accentuates the spectral properties of green plants so that they appear distinct
+# from other image features. 
+# VI should:
+# 1. Indicate the AMOUNT of vegetation (e.g., %cover, LAI, biomass, etc.), 
+# 2. Distinguish between soil and vegetation
+# 3. Reduce atmospheric and topographic effects if possible
+
 # Calcolare l'indice spettrale
 
 library(raster)
@@ -26,6 +34,8 @@ dvi1992 = l1992[[1]] - l1992[[2]]
 # Scala colori 1
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
 plot(dvi1992, col=cl)
+# riflettanza range: 0-255
+# DVI range: -225-225 (<DVI pianta non in salute)
 
 # Importare l'immagine più recente
 l2006 <- brick("defor2_.png")
@@ -40,7 +50,7 @@ plotRGB(l2006, 1, 2, 3, stretch="Lin")
 dvi2006 = l2006[[1]] - l2006[[2]]
 plot(dvi2006, col=cl)
 
-# Multitemporal analysis
+# ANALISI MULTITEMPORALE
 difdvi = dvi1992 - dvi2006
 
 # Scala colori 2
@@ -48,6 +58,8 @@ cld <- colorRampPalette(c('blue','white','red'))(100)
 plot(difdvi, col=cld)
 
 # 2. Calcolo NDVI 1992 
+# NDVI: NIR - red / NIR + red
+# NDVI range: -1-1
 ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
 plot(ndvi1992, col=cl)
 
@@ -62,10 +74,3 @@ plot(difndvi, col=cld) # noto che rosso diminuto perchè ha subito la deforestaz
 #spaziale = dimensione pixel, 
 #spettrale = barre
 
-#Vegetational indices are mathematical combination or transformation of spectral bands that
-#accentuates the spectral properties of green plants so that they appear distinct
-#from other image features. 
-#VI should:
-#1. Indicate the AMOUNT of vegetation (e.g., %cover, LAI, biomass, etc.), 
-#2. Distinguish between soil and vegetation
-#3. Reduce atmospheric and topographic effects if possible
