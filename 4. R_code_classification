@@ -9,22 +9,26 @@
 # pixel ?
 # vado a misurare la distanza tra classe acqua e vegetazione
 
-
 install.packages("Rstoolbox")
 library(raster)
 library(Rstoolbox) #libreria per le analisi da gestione di dati satellitali
-# set work directory
+
+# Settare working directory
 setwd("C:/lab/")
-# data import
+
+# Importare dati 
+# brick(): file stratificati
+# raster(): immagini con un solo layer
 so <- brick("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
 
+# Plot
 plotRGB(so, 1, 2, 3, stretch="lin")
 plotRGB(so, 1, 2, 3, stretch="hist")
 
 # CLASSIFICARE I DATI DEL SOLE
 
 # https://rspatial.org/raster/rs/4-unsupclassification.html
-# organizzati dati in 3 classi (=livelli di energia)
+# organizzati dati in 3 classi (= livelli di energia)
 
 # 1. Trasformare l'immagine in serie di valori continui con funzione
 # getValues
