@@ -53,11 +53,11 @@ plot(image_2011[[4]], col = palette) #2
 dev.off()  # per rimuovere multiframe
 
 # Funzione per esportare immagini
-pdf("my_1st_graph.pdf")
+pdf("my_1st_graph.pdf") #pdf
 plot(image_2011[[4]], col = palette) 
 dev.off()
 
-png("first.png")
+png("first.png") #png
 plot(image_2011[[4]], col = palette) 
 dev.off()
 
@@ -66,7 +66,6 @@ dev.off()
 par(mfrow = c(2, 1))  # un multiframe con 2 righe e 1 colonna
 plot(image_2011[[3]], col = palette) #red
 plot(image_2011[[4]], col = palette) #NIR
-
 dev.off() 
 
 # Si notano le differenze tra le due palette
