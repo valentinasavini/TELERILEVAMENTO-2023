@@ -1,22 +1,25 @@
 # R_code_vegetation_indices
-# Vegetational indices are mathematical combination or transformation of spectral bands that
-# accentuates the spectral properties of green plants so that they appear distinct
-# from other image features. 
-# VI should:
-# 1. Indicate the AMOUNT of vegetation (e.g., %cover, LAI, biomass, etc.), 
-# 2. Distinguish between soil and vegetation
-# 3. Reduce atmospheric and topographic effects if possible
 
-# Calcolare l'indice spettrale
+# TEORIA 
+# Gli indici vegetazionali sono combinazioni matematiche o trasformazioni di bande spettrali
+# accentua le proprietà spettrali delle piante verdi in modo che appaiano distinte
+# da altre funzionalità dell'immagine. 
+# VI dovrebbero:
+# 1. Indicare la QUANTITÀ di vegetazione (es. % copertura, LAI, biomassa, ecc.),
+# 2. Distinguere tra suolo e vegetazione
+# 3. Ridurre,  se possibile, gli effetti atmosferici e topografici
 
+# Installare pacchetti
+#install.packages("raster")
 library(raster)
-# Settare working directory
+
+#  Impostare la working directory
 setwd("C:/lab/")
 
-# Importare defor1.png
+# Importare dati
 l1992 <- brick("defor1_.png")
 
-# Plot l'immagine con plotRGB
+# Disegnare l'immagine con plotRGB
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 
 # Cos'è NIR? - NASA mette NIR nella prima banda
@@ -27,45 +30,49 @@ plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 # plotRGB(l1992, r=4, g=3, b=2, stretch="Lin")
 # export: 1, 2, 3
 
-# 1. Calcolo DVI 1992 
-# DVI: NIR - RED
-dvi1992 = l1992[[1]] - l1992[[2]] 
+## CALCOLARE DVI 
+# 1992 DVI
+dvi1992 = l1992[[1]] - l1992[[2]] # DVI: NIR - RED
 
-# Scala colori 1
+# Creare scala colori 1
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) # specifying a color scheme
+
+# Plot
 plot(dvi1992, col=cl)
 # riflettanza range: 0-255
-# DVI range: -225-225 (<DVI pianta non in salute)
+# DVI range: -225-225 (< DVI pianta non in salute)
 
 # Importare l'immagine più recente
 l2006 <- brick("defor2_.png")
+# Plot 
 plotRGB(l2006, 1, 2, 3, stretch="Lin")
 
-# Esercizio: plottare l'immagine del 1992 sopra e sotto quella del 2006
+# ESERCIZIO: plot l'immagine del 1992 sopra e sotto quella del 2006
 par(mfrow=c(2,1))
 plotRGB(l1992, 1, 2, 3, stretch="Lin")
 plotRGB(l2006, 1, 2, 3, stretch="Lin")
 
-# calcolo DVI 2006
+# 2006 DVI
 dvi2006 = l2006[[1]] - l2006[[2]]
 plot(dvi2006, col=cl)
 
-# ANALISI MULTITEMPORALE
+# Analisi multitemporale
 difdvi = dvi1992 - dvi2006
-
 # Scala colori 2
 cld <- colorRampPalette(c('blue','white','red'))(100)
 plot(difdvi, col=cld)
 
-# 2. Calcolo NDVI 1992 
-# NDVI: NIR - red / NIR + red
-# NDVI range: -1-1
+## CALCOLARE NDVI - NDVI: NIR - red / NIR + red - normalizzazione DVI
+# 1992 NDVI
 ndvi1992 = dvi1992 / (l1992[[1]] + l1992[[2]])
 plot(ndvi1992, col=cl)
+# NDVI range: -1-1
 
+# 2006 NDVI
 ndvi2006 = dvi2006 / (l2006[[1]] + l2006[[2]])
 plot(ndvi2006, col=cl)
 
+# Analisi multitemporale
 difndvi = ndvi1992 - ndvi2006
 plot(difndvi, col=cld) # noto che rosso diminuto perchè ha subito la deforestazione
 
