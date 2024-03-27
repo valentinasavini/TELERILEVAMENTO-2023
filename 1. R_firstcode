@@ -1,43 +1,57 @@
 # R_firstcode
-# Il primo codice su Git Hub
-
+# TEORIA
 # iniziamo a installare il pacchetto raster : utilizzato per scrivere, leggere, manipolare, analizzare e modellare dati spaziali
+# funzioni viste: 
+#install.packages("") - per installare pacchetti
+#library() - per caricare pacchetti
+#setwd("") - per impostare working directory
+#brick("") - per importare dati da fuori R a dentro 
+#plot() - per disegnare 
+#colorRampPalette() - per creare palette colori 
+#dev.off() - per rimuovere multiframe
+# pdf("nome.pdf")
+## plot() - per esportare immagini
+#par(mfrow = c(righe, colonne)) - per plottare due o più grafici in un multiframe 
+#plotRGB() - per creare immagini a colori veri (o falsi) da Landsat e altre immagini satellitari multibanda.
+
 
 # Installare pacchetto raster
 #install.packages("raster")
 library(raster)
 
-# Setto la working directory
+# Impostare la working directory
 setwd("C:/lab")
 
-# Funzione Brick per importare dati
+# Importare dati 
 image_2011 <- brick("p224r63_2011_masked.grd")
 image_2011  # ncell = pixel totali
 # un RasterBrick è un oggeto raster multi-layer  
 
-# Plot data in maniera casuale 
-plot(image_2011) # default legend
+# Disegnari dati
+plot(image_2011) # leggenda default
 
-colors <- colorRampPalette(c("red", "orange", "yellow")) (100) # n° di sfumature
+# Creare palette colori  
+colors <- colorRampPalette(c("red", "orange", "yellow")) (100) #n° di sfumature
 colors_3 <- colorRampPalette(c("red", "orange", "yellow")) (3)
 
 # Plot con palette di colori scelte
 plot(image_2011, col = colors)
 plot(image_2011, col = colors_3) # meno dettagli = peggiore qualità dell'immagine
 
-# Plot solo un elemento dell'immagine multi-layerimage
+# ESERCIZIO 1: Plot solo un elemento dell'immagine multi-layer
+## METODO 1
 plot(image_2011[[4]], col = colors)
-
-nir <- image_2011$B4_sre # un altro modo, con assegno
+## METODO 2 - con assegno
+nir <- image_2011$B4_sre 
 plot(nir, col = colors)
 plot(nir, col = colors_3) 
 
-# Cambio palette
+# Cambiare palette
 new_palette <- colorRampPalette(c("aquamarine", "cadetblue", "cyan")) (100)
 plot(image_2011, col = new_palette)
 plot(image_2011[[4]], col = new_palette) 
 
-# ESERCIZIO: plot banda NIR
+# ESERCIZIO: Plot banda NIR
 # b1 = blue
 # b2 = green
 # b3 = red
@@ -52,17 +66,17 @@ plot(image_2011[[4]], col = palette) #2
 
 dev.off()  # per rimuovere multiframe
 
-# Funzione per esportare immagini
-pdf("my_1st_graph.pdf") #pdf
+# Esportare immagini
+# PDF
+pdf("my_1st_graph.pdf") 
 plot(image_2011[[4]], col = palette) 
 dev.off()
-
+# PNG
 png("first.png") #png
 plot(image_2011[[4]], col = palette) 
 dev.off()
 
-
-# Funzione per plottare due o più grafici in un multiframe
+# Plottare due o più grafici in un multiframe
 par(mfrow = c(2, 1))  # un multiframe con 2 righe e 1 colonna
 plot(image_2011[[3]], col = palette) #red
 plot(image_2011[[4]], col = palette) #NIR
@@ -94,15 +108,12 @@ plot(image_2011[[3]], col = col_aquamarine)
 col_pink <- colorRampPalette(c("pink", "violet", "darkorchid4"))(100)
 plot(image_2011[[4]], col = col_pink)
 
-
-# RGB plotting, plot of multi-layered raster object
-# 3 bands are combined such that they represent the red, green and blue channel
-# This function can be used to make 'true (or false) color images
-# from Landsat and other multi-band satellite images.
-
+# RGB plotting, 
+# plot di un oggetto raster multistrato, 3 bande sono combinate in modo tale da rappresentare il canale rosso, verde e blu
 # Blue = 1
 # Green = 2
 # Red = 3
+# NIR = 4
 
 plotRGB(image_2011, r = 3, g = 2, b = 1, stretch = "Lin") # colori naturali
 plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin") # vegetazione è rossa
@@ -119,13 +130,13 @@ plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin")
 plotRGB(image_2011, r = 3, g = 2, b = 1, stretch = "Hist")  # colori naturali
 plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Hist")
 
-# Mixed stretching, differences between the 2 types of stretch
+# Differenza tra due stretch
 plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Lin")
 plotRGB(image_2011, r = 4, g = 3, b = 2, stretch = "Hist")
 
 dev.off()
 
-# Exercise: plot the NIR band
+# ESERCIZIO: importare la banda NIR 
 plot(image_2011[[4]])
 
 # Importare l'immagine del 1988 
@@ -135,7 +146,6 @@ plot(image_1988)
 # Plot in RGB  (colori naturali)
 plotRGB(image_1988, r = 3, g = 2, b = 1, stretch = "Lin")
 plotRGB(image_1988, r = 4, g = 3, b = 2, stretch = "Lin")
-
 plotRGB(image_1988, 4, 3, 2, stretch = "Lin")  # modalità accorciata 
 
 # Multiframe per vedere la differenza tra 1988 e 2011
