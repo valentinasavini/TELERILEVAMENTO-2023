@@ -5,16 +5,16 @@
 # comune con funzione list.files(). Successivamente applicando alla lista una funzione (raster)
 # tramite funzione lapply() e mettiamo tutti i dati importati insieme tramite la funzione stack().
 
-# Installare i pacchetti 
+### ESERCIZIO 1 - GREECELAND
+
+# Installo i pacchetti 
 install.packages("raster")
 install.packages("rasterVis")
 library(raster)
 library(rasterVis)
 
-# Imposto workdirectory
+# Imposto la working directory
 setwd("C:/lab/greenland")
-
-### ESERCIZIO 1 - GREECELAND
 
 ## METODO 1
 # Importo dati
