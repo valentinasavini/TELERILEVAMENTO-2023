@@ -1,24 +1,28 @@
-# R_code_time _series 
+# R_code_time_series 
 # Time series analysis 
+# TEORIA 
+# Codice per importare insieme i dati creando una lista con pattern 
+# comune con funzione list.files(). Successivamente applicando alla lista una funzione (raster)
+# tramite funzione lapply() e mettiamo tutti i dati importati insieme tramite la funzione stack().
 
-#installare i pacchetti 
+# Installare i pacchetti 
 install.packages("raster")
 install.packages("rasterVis")
 library(raster)
 library(rasterVis)
 
-#imposto workdirectory
+# Imposto workdirectory
 setwd("C:/lab/greenland")
 
-### ESERCIZIO 1
+### ESERCIZIO 1 - GREECELAND
+
+## METODO 1
 # Importo dati
-# METODO 1
 lst_2000 <- raster("lst_2000.tif")
 lst_2005 <- raster("lst_2005.tif")
 lst_2010 <- raster("lst_2010.tif")
 lst_2015 <- raster("lst_2015.tif")
-
-# plotto 
+# Plot
 par(mfrow=c(2,2))
 plot(lst_2000)
 plot(lst_2005)
@@ -26,86 +30,82 @@ plot(lst_2010)
 plot(lst_2015)
 dev.off()
 
-# METODO 2
+## METODO 2
 # list.files, lapply, stack
-# creo lista
+# Creo lisTa
 rlist <- list.files(pattern="lst")
 rlist
-# collego lista a funzione
+# Collego lista a funzione
 import <- lapply(rlist,raster)
 import
-# unisco insieme
+# Unisco insieme
 TGr <- stack(import)
 TGr
-# plot
+# Plot
 plot(TGr)
-# cambio colori 
+# Cambio colori 
 plotRGB(TGr, 1, 2, 3, stretch="Lin")
 plotRGB(TGr, 2, 3, 4, stretch="Lin")
 plotRGB(TGr, 4, 3, 2, stretch="Lin")
 
-# differenza (2005-2000)
+# Differenza (2005-2000)
 dift <- TGr[[2]] - TGr[[1]]
 plot(dift)
-
-# cambio colore
+# Cambio colore
 cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
 plot(TGr, col=cl)
 dev.off()
 
-### ESERCIZIO 2: 
-#NO2 dimuisce durante il lperiodo del lockdown
+### ESERCIZIO 2 - NO2 dimunuisce durante il periodo del lockdown
 
 # Installo e imposto working directory
 library(raster)
 setwd("C:/lab/en")
 
-#metodo 1
+## METODO 1
 # Importo due immagini 
 EN01 <- raster("EN_0001.png")
 EN13 <- raster("EN_0013.png")
-
-# creo palette
+# Creo palette
 cl <- colorRampPalette(c('red','orange','yellow'))(100) 
-
-# plot
+# Plot
 par(mfrow=c(2,1))
 plot(EN01, col=cl)
 plot(EN13, col=cl)
 
-# metodo 2: importo tutto come nell'esercizio 1
-# seguendo step: list.files, lapply, stack
-
+## METODO 2
 rlist <- list.files(pattern = "EN")
 rimp <- lapply(rlist, raster)
 en <- stack(rimp)
 plot(en, col=cl)
 
-# controllo che le immagini che ho riportato nella lista sia uguale alla prima riportata
-# check 1
+# Effettuo un check tra metodo 1 e 2
+# Check 1
 par(mfrow=c(1,2))
 plot(EN01, col= cl)
 plot(en[[1]], col= cl)
-# check 1
+# Check 2
 difcheck <- EN01 - en[[1]]
 difcheck 
 plot(difcheck) # un colore check OK
 
-# Exercise: plot EN01 e EN13 (inizio e fine pandemia)
+# ESERCIZIO: osservare le differenze tra inzio e fine pandemia
+# Plot prima e dopo:
+# 1
 par(mfrow=c(1,2))
 plot(en[[1]], col=cl)
 plot(en[[13]], col=cl)
-
-# o usando stack():
+# 2 (usando funzione stack())
 en113 <- stack(en[[1]], en[[13]])
 plot(en113, col=cl)
 
-# vediamo le differenze:
+dev.off()
+
+# Vediamo le differenze:
 difen <-  en[[1]] - en[[13]]
 cldif <- colorRampPalette(c('blue','white','red'))(100) 
+# Plot con palette
 plot(difen, col=cldif) # zone rosse dove prima c'era molta produzione 
-
-# plotRGB 
+# Plot con RGB 
 plotRGB(en, r=1, g=7, b=13, stretch="lin")
-plotRGB(en, r=1, g=7, b=13, stretch="hist")
-# valori rossi gennaio, valori verdi febbraio, valori blu marzo (valori più alti)
+plotRGB(en, r=1, g=7, b=13, stretch="hist") # valori rossi gennaio, valori verdi febbraio, valori blu marzo (valori più alti)
