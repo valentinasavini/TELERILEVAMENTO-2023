@@ -1,24 +1,24 @@
-# R code classification
+#R_code_classification
 
-# TEORIA:
-# pixel di vegetazione, all'interno del grafico bidimensionale
-# alti valori di infrarosso e bassi valori di infrarosso
-# perchè vegetazione : 
-# pixel di acqua che assorbe tutto l'infrarosso
-# alti valori di infrarosso e bassi valori di rosso
-# pixel ?
-# vado a misurare la distanza tra classe acqua e vegetazione
+# TEORIA
+# Le immagini satellitari non sono fotografie
+# Codice per passare da dati continui a classi (es. classi mineralogiche)
+# Le immagini satellitari sono composte da n dimensioni (n° di bande)
+# Si trasforma l'immagine in una serie di valori continui tramite la funzione
+# getValues(), successivamente con la funzione kmeans() si classificano i valori 
+# e con la funzione setValues() si riassegnano le classi a un nuovo raster
 
-install.packages("Rstoolbox")
+
+### ESERCIZIO 1 - SOLE
+
+# Installo pacchetti 
 library(raster)
-library(Rstoolbox) #libreria per le analisi da gestione di dati satellitali
+#library(Rstoolbox) #libreria per le analisi da gestione di dati satellitali
 
-# Settare working directory
+# Imposto la working directory
 setwd("C:/lab/")
 
-# Importare dati 
-# brick(): file stratificati
-# raster(): immagini con un solo layer
+# Importo dati
 so <- brick("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
 
 # Plot
@@ -28,21 +28,21 @@ plotRGB(so, 1, 2, 3, stretch="hist")
 # CLASSIFICARE I DATI DEL SOLE
 
 # https://rspatial.org/raster/rs/4-unsupclassification.html
-# organizzati dati in 3 classi (= livelli di energia)
+# organizzati dati in 3 classi (=livelli di energia)
 
 # 1. Trasformare l'immagine in serie di valori continui con funzione
 # getValues
-
 singlenr <- getValues(so)
 singlenr
-# prende ogni singolo pixel di immagine e o rimette in forma tabellare
-#set.seed(99)
+
+# prende ogni singolo pixel di immagine e lo rimette in forma tabellare
+#set.seed(100)
 
 # 2. Classificazione con funzione:
 # kmeans
-
 kcluster <- kmeans(singlenr, centers = 3) #k=3
 kcluster
+
 # clustering : raggruppare pixel basandosi su delle classi
 # means: medie
 # k: tot
@@ -76,7 +76,7 @@ percentages
 # classificazione non supervisionata perchè non dicidiamo noi il livello energetico
 # più alto o più basso
 
-# GRAN CANYON
+# ESERCIZIO 2 - GRAN CANYON
 gc <- brick("dolansprings_oli_2013088_canyon_lrg.jpg")
 gc 
 
@@ -88,27 +88,31 @@ plotRGB(gc, r=1, g=2, b=3, stretch="lin")
 # change the stretch to histogram stretching
 plotRGB(gc, r=1, g=2, b=3, stretch="hist")
 
-# classification
+# CLASSIFICAZIONE
 
-# 1. Get values
+# 1. Trasformare l'immagine in serie di valori continui con funzione
+# getValues
 singlenr <- getValues(gc)
 singlenr
 
-# 2. Classify
+# 2. Classificazione con funzione:
+# kmeans
 kcluster <- kmeans(singlenr, centers = 3)
 kcluster
 
-# 3. Set values
-gcclass <- setValues(gc[[1]], kcluster$cluster) # assign new values to a raster object
+# 3. Riassegnare le classi a un nuovo raster con funzione:
+# setValues
+gcclass <- setValues(gc[[1]], kcluster$cluster) 
 
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(gcclass, col=cl)
 
+# Calcolo percentuali 
 frequencies <- freq(gcclass)
 tot = 58076148
 percentages = frequencies * 100 /  tot
 
-# Exercise: classify the map with 4 classes
+# ESERCIZIO: classicare la mappa con 4 classi 
 # 1. Get values
 singlenr <- getValues(gc)
 singlenr
@@ -122,4 +126,3 @@ gcclass <- setValues(gc[[1]], kcluster$cluster) # assign new values to a raster 
 
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(gcclass, col=cl)
-
