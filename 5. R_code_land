@@ -1,25 +1,28 @@
 # R_code_land_cover
 
+# TEORIA 
+
+# Installo i pacchetti 
 library(raster)
 #install.packages("ggplot2")
 library(ggplot2)
 #install.packages("patchwork")
 library(patchwork) # for multiframe ggplot plotting
 
-# Set the working directory in Windows
+# Imposto la working directory
 setwd("C:/lab/")
-# ricorda: NIR 1, RED 2, GREEN 3
 
-# Caricamento dati sulla deforestazione
+# Importo dati 
 defor1 <- brick("defor1_.png")
-plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
-
 defor2 <- brick("defor2_.png")
+
+# Plot
+plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
 
 # NIR 1, RED 2, GREEN 3
 
-# Plor le immagini in un multiframe
+# Plot le immagini in un multiframe
 par(mfrow=c(1,2))
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
