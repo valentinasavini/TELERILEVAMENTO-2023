@@ -32,7 +32,7 @@ dev.off()
 
 ## METODO 2
 # list.files, lapply, stack
-# Creo lisTa
+# Creo lista
 rlist <- list.files(pattern="lst")
 rlist
 # Collego lista a funzione
