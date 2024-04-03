@@ -1,5 +1,6 @@
 # R_code_time_series 
 # Time series analysis 
+
 # TEORIA 
 # Codice per importare insieme i dati creando una lista con pattern 
 # comune con funzione list.files(). Successivamente applicando alla lista una funzione (raster)
