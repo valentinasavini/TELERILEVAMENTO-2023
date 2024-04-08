@@ -60,7 +60,7 @@ soclass <- setValues(so[[1]], kcluster$cluster) # assign new values to a raster 
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(soclass, col=cl)
 
-# calcolo la percentuale di pixel delle diverse energi
+# calcolo la percentuale di pixel delle diverse energie
 frequencies <- freq(soclass)
 frequencies
 # calcolo percentuale
