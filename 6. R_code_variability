@@ -4,10 +4,8 @@ R_code_variability
 # deviazione standard -> radice della somma degli scarti quadratici medi / numero campioni; 
 # (> dev std > è la varibialità)
 
-# https://github.com/valentinasavini/telerilevamento2023/blob/main/R_code_variaility.R
 
-# settiamo la working directory e le library necessarie #
-
+#Installo pacchetti 
 library(raster)
 library(ggplot2)
 # install.packages('viridis') # per la gestione dei colori, colora i plot con ggplot in modo automatico
@@ -15,14 +13,17 @@ library(viridis)
 # install.packages('patchwork') 
 library(patchwork)
 
+# Imposto la working directory
 setwd("C:/lab/")
 
-# importo l'immagini sentinel.png dentro a R
-sen <- brick("sentinel.png") # funzione brick: importa tutto l'intero blocco di dati
-# band1 = NIR
-# band2 = red
-# band3 = green
+# Importo dati
+sen <- brick("sentinel.png") 
+sen
+# NIR = 1, red = 2, green = 3
+
+# Plot
 plotRGB(sen, 1, 2, 3, stretch= 'Lin') 
+plotRGB(sen, 2, 1, 3, stretch= 'Lin') # vegetazione verde: perchè messo banda NIR sul green
 
 # evidenziamo i crepacci tramite la funzione focal
 # come funziona il calcolo: 
@@ -34,17 +35,21 @@ plotRGB(sen, 1, 2, 3, stretch= 'Lin')
 
 nir <- sen[[1]] # NIR 
 mean3 <- focal(nir, matrix(1/9, 3, 3), fun=mean) # calcolo della media
-sd3 <- focal(nir,matrix(1/9, 3, 3), fun=sd) # calcola della deviazione standard
+sd3 <- focal(nir,matrix(1/9, 3, 3), fun=sd) # calcolo della deviazione standard
 
-# plottiamo
+# Plottiamo
 plot(sd3)
+plot(mean3)
 
-sd3d <- as.data.frame(sd3, xy=T) # lista
-# plotting con ggplot usando geombar per avere istrogrammi
+# Dataframe con valori della deviazione standard
+sd3d <- as.data.frame(sd3, xy=T)
+sd3d
+
+# Plot con ggplot usando geombar per avere istrogrammi
 ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) + # aes indicare le x e y che sono sempre quelle e fill
- ggtitle("standard deviation moving window 3x3") 
- 
+  ggtitle("standard deviation moving window 3x3") 
+
 
 # Uso il pacchetto Viridis per avere diverse palette di colori 
 
@@ -54,27 +59,27 @@ ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
   scale_fill_viridis() 
 
-
 # 2: magma + aggiunta del titolo con ggtitle
 ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
   scale_fill_viridis(option='magma') +
   ggtitle('Strandard deviation via the magma colour scale')
 
+# 3: cividis
 ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
   scale_fill_viridis(option='cividis') +
   ggtitle('Strandard deviation via the cividis colour scale')
 
-# plotting multiplo i una singola immagine 
+# Plotting multiplo in una singola immagine 
 p1 <- ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
   scale_fill_viridis() +
   ggtitle('Strandard deviation via the viridis colour scale')
 
-#inferno con pacchetto patchwork
 p2 <- ggplot() +
   geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
   scale_fill_viridis(option='inferno') +
   ggtitle('Strandard deviation via the inferno colour scale')
 
+p1+p2
