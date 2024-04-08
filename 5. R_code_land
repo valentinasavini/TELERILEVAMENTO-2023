@@ -1,12 +1,18 @@
 # R_code_land_cover
 
 # TEORIA
-# codice per generare mappe della copertura del suolo da immagini satellitari
+# codice per generare mappe sulla copertura del suolo da immagini satellitari
+# 1* i pixel dell'immagine vengono classificati campionandone una parte in modo casuale nel seguente modo:
+# immaginando un grafico con la banda del rosso su x e il NIR su y
+# i pixel rossi corrisponderanno ad alti valori di NIR e bassi di rosso (in alto a sx del grafico) -> vegetazione
+# i pixel blu/grigi a bassi valori di NIR e alti valori nel rosso (in basso a dx) -> aree agricole/antropizzate
+# tutti gli altri pixel che non rientrano nelle due categorie precedenti vengono associati in base alla distanza minima alla nuvola di pixel più vicina
+# (principio della maximum likelihood) -> per calibrare il modello iniziale
 
 # Installo i pacchetti 
 library(raster)
-#install.packages("ggplot2")
-library(ggplot2)
+#install.packages("ggplot2") # pacchetto per la creazione di grafici più eleganti
+library(ggplot2) 
 #install.packages("patchwork")
 library(patchwork) # for multiframe ggplot plotting
 
@@ -15,21 +21,25 @@ setwd("C:/lab/")
 
 # Importo dati 
 defor1 <- brick("defor1_.png") # 1992
+defor1
 defor2 <- brick("defor2_.png") # 2006
 
 # Plot
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2 r=1, g=2, b=3, stretch="lin")
 
+# la vegetazione riflette molto nel vicino infrarosso quindi sappiamo che nell'immagine 
+# il rosso è il NIR (Near InfraRed) e corrisponde alla copertura vegetale
+
 # NIR 1, RED 2, GREEN 3
 
 # Plot le immagini in un multiframe
-par(mfrow=c(1,2))
+par(mfrow=c(1,2)) # 2 righe 1 colonna
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
 
 # CLASSIFICAZIONE NON SUPERVISIONATA
-
+# 1*
 # IMMAGINE 1 - 1992
 # 1. Trasformare l'immagine in serie di valori continui con funzione
 singlenr1 <- getValues(defor1)
@@ -45,9 +55,10 @@ defor1class <- setValues(defor1[[1]], kcluster1$cluster) # assign new values to 
 #Plot
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(defor1class, col=cl)
+defor1class
 
-# class 1: forest
-# class 2: agriculture
+# class 2: forest
+# class 1: agriculture
 
 # IMMAGINE 2 - 2006
 # 1. Trasformare l'immagine in serie di valori continui con funzione
@@ -64,13 +75,16 @@ defor2class <- setValues(defor2[[1]], kcluster2$cluster) # assign new values to 
 # Plot
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(defor2class, col=cl)
-# class 1: forest
-# class 2: bare soil
+defor2class
+
+# class 2: forest
+# class 1: bare soil
 
 # Multiframe
 par(mfrow=c(2,1))
 plot(defor1class)
 plot(defor2class)
+dev.off()
 
 # calcolo la percentuale
 # 1992
@@ -86,6 +100,7 @@ percentages1
 frequencies2 <- freq(defor2class)
 tot2 = ncell(defor2class)
 percentages2 = frequencies2 * 100 /  tot2
+percentages2
 
 # forest: 52.07
 # bare soil: 47.93
@@ -94,6 +109,7 @@ percentages2 = frequencies2 * 100 /  tot2
 cover <- c("Forest","Bare soil")
 percent1992 <- c(89.75, 10.25)
 percent2006 <- c(52.07, 47.93)
+cover
 
 # costruisco un dataframe
 percentages <- data.frame(cover, percent1992, percent2006)
