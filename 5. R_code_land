@@ -1,6 +1,7 @@
 # R_code_land_cover
 
-# TEORIA 
+# TEORIA
+# codice per generare mappe della copertura del suolo da immagini satellitari
 
 # Installo i pacchetti 
 library(raster)
@@ -18,7 +19,7 @@ defor2 <- brick("defor2_.png") # 2006
 
 # Plot
 plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
-plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
+plotRGB(defor2 r=1, g=2, b=3, stretch="lin")
 
 # NIR 1, RED 2, GREEN 3
 
@@ -41,6 +42,7 @@ kcluster1
 # 3. Riassegnare le classi a un nuovo raster con funzione
 defor1class <- setValues(defor1[[1]], kcluster1$cluster) # assign new values to a raster object
 
+#Plot
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(defor1class, col=cl)
 
@@ -59,12 +61,13 @@ kcluster2
 # 3. Riassegnare le classi a un nuovo raster con funzione
 defor2class <- setValues(defor2[[1]], kcluster2$cluster) # assign new values to a raster object
 
+# Plot
 cl <- colorRampPalette(c('yellow','black','red'))(100)
 plot(defor2class, col=cl)
 # class 1: forest
 # class 2: bare soil
 
-# multiframe
+# Multiframe
 par(mfrow=c(2,1))
 plot(defor1class)
 plot(defor2class)
