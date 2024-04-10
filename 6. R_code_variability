@@ -38,6 +38,10 @@ nir <- sen[[1]] # NIR
 mean3 <- focal(nir, matrix(1/9, 3, 3), fun=mean) # calcolo della media
 sd3 <- focal(nir,matrix(1/9, 3, 3), fun=sd) # calcolo della deviazione standard
 
+# i luoghi a più bassa variabilità sono quelli più omogenei (a roccia compatta (no crepacci), acqua, parte uniforme della neve)
+# i luoghi a più alta variabilità sono quelli meno omogenei (limite dei boschi, interno dei boschi, crepacci, zone non uniformi)
+# le zone rosse sono quelle a più alta variabilità
+
 # Plottiamo
 plot(sd3)
 plot(mean3)
