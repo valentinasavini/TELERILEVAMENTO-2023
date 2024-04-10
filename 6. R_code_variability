@@ -1,6 +1,7 @@
 R_code_variability
 
 # TEORIA:
+# Analisi di pattern spaziali tramite l'uso di indici del paesaggio: il ghiacciaio del Similaun (dati Sentinel, 10m)
 # deviazione standard -> radice della somma degli scarti quadratici medi / numero campioni; 
 # (> dev std > è la varibialità)
 
