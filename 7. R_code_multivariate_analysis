@@ -1,47 +1,50 @@
 # R_code_multivariate_analysis
 # come ridurre un dataset multidimensionale
+# attravero la PCA
 
-# Caricare i packages necessari
+# Installo pacchetti 
 library(raster)
 library(ggplot2)
 library(viridis)
 
-# Settare la working directory 
+# Imposto la working directory 
 setwd("C:/lab/")
 
-# Caricare l'immagine
+# Importo dati
 sen <- brick("sentinel.png")
+sen
+ncell(sen) #633612
 
-# Plottare l'immagini caricata
+# Plot
 plot(sen)
-
 dev.off()
 
 # Creare uno stack senza la banda 4 (perchè la banda 4 è uguale a 0)
 sen2 <- stack(sen[[1]], sen[[2]], sen[[3]])
 plot(sen2)
+ncell(sen2) #633612
 
 # Calcolare la correlazione tra le 3 differenti bande
 pairs(sen2)
 
-# compattare le 3 differnti bande in uno singolo
+# compattare le 3 differenti bande in uno singolo
 
 # PCA (Principal Component Analysis)
-sample <- sampleRandom(sen2, 10000) #lets select a randomic sample of 10000 pixels
-sample # these are the 10000 randomic samples with theirs correspective values in the 3 different bands
+sample <- sampleRandom(sen2, 10000) # selezionare un campione randomico di 10000 pixel
+sample # questi sono i 10000 campioni randomici con i rispettivi valori nelle 3 diverse bande
+pca <- prcomp(sample) # pca = principal component analysis
 
-pca <- prcomp(sample) #pcs = principal component analisis
+summary(pca) # la prima componente da sola può spiegare il 73% della variabilità
+# il primo è per definizione la componente con la maggiore variabilità spiegata
+# il componente 3 ha meno informazioni
 
-summary(pca) # the first componend alone can explain the 73% of the variability
-#the firs one is by thefinition the component with the higest explained variability
-#the 3 component has the least informations
-
-# correlation with original bands
+# Correlazione con bande originali
 pca
 
 # pc map
-pci <- predict(sen2, pca, index=c(1:3)) #
-plot(pci)# we can graphically see that the 1 componend contains the most informaitions while the 3 component doesn't have almost any informations
+pci <- predict(sen2, pca, index=c(1:3)) 
+plot(pci) # # possiamo vedere graficamente che il componente 1 contiene la maggior 
+# parte delle informazioni mentre il componente 3 non ha quasi nessuna informazione
 plot(pci[[1]])
 
 # ggplot
@@ -49,15 +52,29 @@ plot(pci[[1]])
 pcid <- as.data.frame(pci[[1]], xy=T)
 pcid
 
+# magma
 ggplot() +
   geom_raster(pcid, mapping=aes(x=x, y=y, fill=PC1)) +
-  scale_fill_viridis() # direction=-1 in case of reverse colour ramp
+  scale_fill_viridis("magma") # direction=-1 in case of reverse colour ramp
+# viridis
+ggplot() +
+  geom_raster(pcid, mapping=aes(x=x, y=y, fill=PC1)) +
+  scale_fill_viridis("inferno")
 
-# focal sd
+# focal sd 
 sd3 <- focal(pci[[1]], matrix(1/9, 3, 3), fun=sd)
-
 sd3d <- as.data.frame(sd3, xy=T)
 
+# ggplot
 ggplot() +
   geom_raster(sd3d, mapping=aes(x=x, y=y, fill=layer)) +
   scale_fill_viridis()
+
+# Speeding up analysis
+# Aggregate cells: re-sampling
+SEN_res <- aggregate(sen, fact=10)
+SEN_res
+plot(SEN_res)
+# L'immagine viene aggregata o campionata 
+# con un fattore di 10 utilizzando aggregate() per accelerare l'analisi.
+# Poi ripeti la PCA
