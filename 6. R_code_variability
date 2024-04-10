@@ -83,3 +83,100 @@ p2 <- ggplot() +
   ggtitle('Strandard deviation via the inferno colour scale')
 
 p1+p2
+
+R_code_variability
+
+# TEORIA:
+# deviazione standard -> radice della somma degli scarti quadratici medi / numero campioni; 
+# (> dev std > è la varibialità)
+
+
+#Installo pacchetti 
+library(raster)
+library(ggplot2)
+# install.packages('viridis') # per la gestione dei colori, colora i plot con ggplot in modo automatico
+library(viridis)
+# install.packages('patchwork') 
+library(patchwork)
+
+# Imposto la working directory
+setwd("C:/lab/")
+
+# Importo dati
+sen <- brick("sentinel.png") 
+sen
+# NIR = 1, red = 2, green = 3
+
+# Plot
+plotRGB(sen, 1, 2, 3, stretch= 'Lin') 
+plotRGB(sen, 2, 1, 3, stretch= 'Lin') # vegetazione verde: perchè messo banda NIR sul green
+
+# evidenziamo i crepacci tramite la funzione focal
+# come funziona il calcolo: 
+# finestra mobile, prediamo una finestra 3x3 pixel 
+# estraggo i valori medi dalla finestra e calcoliamo la dev std e lo 
+# riportiamo in una nuova mappa (valore centrale)
+# la finestra mobile si muove ed effettuo i calcoli riportando il valore centrale 
+# in una nuova mappa (sposto di un pixel alla volta)
+
+nir <- sen[[1]] # NIR 
+mean3 <- focal(nir, matrix(1/9, 3, 3), fun=mean) # calcolo della media
+sd3 <- focal(nir,matrix(1/9, 3, 3), fun=sd) # calcolo della deviazione standard
+
+# Plottiamo
+plot(sd3)
+plot(mean3)
+
+# Dataframe con valori della deviazione standard
+sd3d <- as.data.frame(sd3, xy=T)
+sd3d
+
+# Plot con ggplot usando geombar per avere istrogrammi
+ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) + # aes indicare le x e y che sono sempre quelle e fill
+  ggtitle("standard deviation moving window 3x3") 
+
+
+# Uso il pacchetto Viridis per avere diverse palette di colori 
+
+# 1: standard 
+# scale_fill_viridis() : applica schede di colori e se non scrivo niente usa la standard
+ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
+  scale_fill_viridis() 
+
+# 2: magma + aggiunta del titolo con ggtitle
+ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
+  scale_fill_viridis(option='magma') +
+  ggtitle('Strandard deviation via the magma colour scale')
+
+# 3: cividis
+ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
+  scale_fill_viridis(option='cividis') +
+  ggtitle('Strandard deviation via the cividis colour scale')
+
+# Plotting multiplo in una singola immagine 
+p1 <- ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
+  scale_fill_viridis() +
+  ggtitle('Strandard deviation via the viridis colour scale')
+
+p2 <- ggplot() +
+  geom_raster(sd3d, mapping= aes(x=x, y=y, fill= layer)) +
+  scale_fill_viridis(option='inferno') +
+  ggtitle('Strandard deviation via the inferno colour scale')
+
+p1+p2
+
+# ESERCIZIO : Plot l'immagine originale (NIR) e la sua deviazione standard
+nir_d <- as.data.frame(nir, xy=T)
+
+p3 <- ggplot() +
+  geom_raster(nir_d,
+              mapping=aes(x=x, y=y, fill=sentinel_1)) +
+  scale_fill_viridis(option="cividis") +
+  ggtitle("NIR Via The Viridis Colour Scale")
+
+p3+p1
