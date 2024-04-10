@@ -5,7 +5,7 @@ R_code_variability
 # (> dev std > è la varibialità)
 
 
-#Installo pacchetti 
+# Installo pacchetti 
 library(raster)
 library(ggplot2)
 # install.packages('viridis') # per la gestione dei colori, colora i plot con ggplot in modo automatico
