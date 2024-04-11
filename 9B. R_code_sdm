@@ -1,1 +1,109 @@
+# SPECIES DISTRIBUTION MODELLING
+
+# Installo i pacchetti 
+install.packages("sf")
+install.packages("sdm")
+install.packages("package:rgdal")
+library(sdm)  # per la distribuzione specie 
+library(sf)  # per gestire i dati sulle specie
+library(raster)
+
+# Carica un file trovato nel pacchetto sdm
+file <- system.file("external/species.shp", package = "sdm")
+file
+species_data <- shapefile("C:/Users/Standard/AppData/Local/R/win-library/4.3/sdm/external/species.shp")
+species_data  # per vedere il set di dati
+
+# Occorenza è la presentza/ assenza di una specie o 0/1 
+
+# Plot i dati riguardo le speciethe data about species
+plot(species_data)
+plot(species_data, pch = 19) # pch per il tipo del punto di occorrenza
+
+# Guardando gli avvenimenti
+species_data$Occurrence
+
+# Plot la presenza, 1 = presenza
+presences <- species_data[species_data$Occurrence == 1,]
+presences
+plot(presences, col = "blue", pch = 19)
+
+# Plot l'assenza, 0 = assenza
+absences <- species_data[species_data$Occurrence == 0,]
+absences
+plot(absences, col = "red", pch = 19)
+
+# Plot l'occorrenza totale ma dividendo i colori
+plot(presences, col = "blue", pch = 19)
+points(absences, col = "red", pch = 19) # points() per plot con quello precedente
+
+# Predittori: guarda il percorso
+path <- system.file("external", package = "sdm")
+path
+
+# Elenca e impila i predittori
+lst <- list.files(path = path, pattern = 'asc', full.names = T)
+lst
+preds <- stack(lst)
+preds
+
+# Plot i predittori
+plot(preds)
+plot(preds$vegetation)  # vegetazione
+
+# ricorda: non ci piace questo tipo di tavolozza -> dal blu al rosso
+
+# Palette colori
+cl <- colorRampPalette(c('lightyellow', 'yellow','orange', 'darkorange','darkred')) (100)
+plot(preds, col = cl)
+
+# Plot predittori e occorrenza insieme 
+plot(preds$elevation, col = cl)
+points(presences, pch = 19)  # questa specie si trova ad altitudini inferiori
+
+plot(preds$precipitation, col = cl)
+points(presences, pch = 19) # e dove è abbastanza umido
+
+plot(preds$temperature, col = cl)
+points(presences, pch = 19) # dove fa più caldo
+
+plot(preds$vegetation, col = cl)
+points(presences, pch = 19) # e dove la copertura vegetale è elevatar
+
+# Si chiamano predittori perché prevedono modelli
+
+
+# Facciamo un modello
+
+# Importo dati da sdm
+data_sdm <- sdmData(train = species_data, predictors = preds)
+# training data
+data_sdm
+
+# modello
+m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation,
+          data = data_sdm,
+          methods = "glm")  # più usato nell'ecologia
+m1
+
+# creare il livello di output raster
+p1 <- predict(m1, newdata = preds)  # pred come estensione e grana
+p1
+
+# plot the output
+plot(p1, col = cl)
+points(presences, pch = 19)
+# Mappa di previsione della distribuzione delle specie:
+# la presenza di punti neri è correlata ad una previsione più alta,
+
+# aggiungi allo stack
+s1 <- stack(preds, p1)
+plot(s1, col = cl)
+
+# cambia nome nell'ultimo plot
+names(s1)[5] <- c('model')
+
+# re-plot
+plot(s1, col = cl)
+
 
