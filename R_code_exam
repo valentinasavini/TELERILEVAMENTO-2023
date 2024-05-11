@@ -75,7 +75,7 @@ plot(marm2017)
 plot(marm2023)
 dev.off() # per eliminare i plot
 
-# Plot immagini con colori naturali
+# Plot immagini con colori naturali (funzione plotRGB())
 par(mfrow = c(2, 1))
 plotRGB(marm2017, 1, 2, 3, stretch= "lin")
 plotRGB(marm2023, 1, 2, 3, stretch= "lin")
@@ -91,11 +91,7 @@ pdf("bande2023.pdf")
 plot(marm2023)
 dev.off()
 
-
-######### 2. CALCOLO E PLOT INDICI SPETTRALI ###########
-
-
-# Prima di procedere taglio le immagini sull'area di interesse
+# Ritaglio sull'are di interesse
 ext <- c(1315500, 1325000, 5849000, 5854000) 
 
 # 2017
@@ -119,16 +115,29 @@ plotRGB(marm23, 1,2,3, stretch = "lin", main= "2023") #2023
 dev.off()
 
 
-# Esporto immagini
-pdf("ghiacciaio 2017 vs 2023.pdf")
-par(mfrow= c(2,1))
-plotRGB(marm17, 1,2,3, stretch = "lin", main= "2017") # 2017
-plotRGB(marm23, 1,2,3, stretch = "lin", main= "2023") #2023
+# Esporto immagini a colori
+png("marmolada 2017.png") # 2017
+plotRGB(marm17, 1,2,3, stretch = "lin", main= "2017") 
+dev.off()
+
+png("marmolada 2023.png") #2023
+plotRGB(marm23, 1,2,3, stretch = "lin", main= "2023") 
+dev.off()
+
+# Esporto banda SWIR
+png("SWIR 2017.png") # 2017
+plot(marm17[[5]]) 
+dev.off()
+
+png("SWIR 2023.png") #2023
+plot(marm23[[5]]) 
 dev.off()
 
 
-# Calcolo l'indice NSDI
-# identificare e mappare la presenza di neve nelle immagini satellitari
+######### 2. CALCOLO E PLOT INDICI SPETTRALI ###########
+
+# Calcolo l'indice NSDI - Normalized Difference Snow Index
+# per identificare e mappare la presenza di neve nelle immagini satellitari
 # NDSI= Green - SWIR / Green + SWIR
 # range: -1 - 1
 
@@ -140,7 +149,7 @@ NDSI23 <- ((marm23[[2]]-marm23[[5]])/(marm23[[2]]+marm23[[5]]))
 
 
 # Creo palette colori
-cl <- colorRampPalette(c("blue", "darkgrey", "yellow"))(100)
+cl <- colorRampPalette(c("blue", "black", "yellow"))(100)
 
 # Plot
 par(mfrow = c(2,1))
@@ -156,22 +165,25 @@ dev.off()
 # Analisi temporale 2017-2023
 NDSI_diff <- NDSI17 - NDSI23
 
-# creo palette colori
-cl1 <- colorRampPalette(c("blue", "darkgrey", "yellow"))(100)
 # Plot
-plot(NDSI_diff, col=cl1)
+plot(NDSI_diff, col=cl)
 # GRIGIO: aree con differenza di NDSI fra 2017 e 2023 nulla
 # BLU: aree con guadagno in neve dal 2017 al 2023
 # GIALLO: aree con perdita in neve dal 2017 al 2023
 
 # Salvo le immagini
-pdf("indice_NDSI_2017VS2023.pdf")
-par(mfrow = c(3, 1))
+png("indice_NDSI_2017.png")
 plot(NDSI17, col=cl) +
   title(main = "NDSI 2017")
+dev.off()
+
+png("indice_NDSI_2023.png")
 plot(NDSI23, col=cl) +
   title(main = "NDSI 2023")
-plot(NDSI_diff, col=cl1) +
+dev.off()
+
+png("indice_NDSI_diff.png")
+plot(NDSI_diff, col=cl) +
   title(main = "differenze NDSI")
 dev.off()
 
@@ -182,13 +194,12 @@ t_resultNDSI
 
 # Paired t-test
 # data:  NDSI17[] and NDSI23[]
-# t = 146.77, df = 475448, p-value
-# < 2.2e-16
+# t = 146.77, df = 475448, p-value < 2.2e-16
 # alternative hypothesis: true mean difference is not equal to 0
 # 95 percent confidence interval:
 #   0.0220726 0.0226701
 # sample estimates:
-#   mean difference 
+# mean difference 
 # 0.02237135 
 
 
@@ -252,12 +263,14 @@ print(plot_PCA23)
 # Minor variabilità   = valore PC1 più alto
 
 # Esporto 
-pdf("PCA.pdf")
-par(mfrow=c(2,1))
+png("PCA2017.png")
 ggplot()+
   geom_raster(PC_fin, mapping = aes(x = x, y = y, fill = PC1))+
   scale_fill_viridis(option = "viridis") +
   labs(title = "PCI1 2017")
+dev.off()
+
+png("PCA2023.png")
 ggplot()+
   geom_raster(PC_fin23, mapping = aes(x = x, y = y, fill = PC1))+
   scale_fill_viridis(option = "viridis", direction = -1) +
@@ -280,8 +293,9 @@ kcluster17
 # setValues
 gcclass17 <- setValues(NDSI17[[1]], kcluster17$cluster) 
 
-cl <- colorRampPalette(c('yellow','black','red'))(100)
-plot(gcclass17, col=cl, main= "2017")
+cl1 <- colorRampPalette(c('yellow','black','red'))(100)
+gc17 <- plot(gcclass17, col=cl1, main= "2017")
+print(gc17)
 
 # GIALLO = neve
 # ROSSO = altro
@@ -312,8 +326,12 @@ kcluster23
 # setValues
 gcclass23 <- setValues(NDSI23[[1]], kcluster23$cluster) 
 
-cl <- colorRampPalette(c('yellow','black','red'))(100)
-plot(gcclass23, col=cl, main= "2023")
+cl <- colorRampPalette(c('red','black','yellow'))(100)
+gc23 <- plot(gcclass23, col=cl, main= "2023")
+print(gc23)
+
+# GIALLO = neve
+# ROSSO = altro
 
 # Calcolo percentuali 
 frequencies23 <- freq(gcclass23)
@@ -326,12 +344,13 @@ percentages23
 
 
 # Esporto immagini
-pdf("classificazione 2017 vs 2023.pdf")
-par(mfrow = c(2, 1))
-plot(gcclass17, col=cl, main= "2017")
-plot(gcclass23, col=cl, main= "2023")
+png("2017.png") #2017
+plot(gcclass17, col=cl1, main= "2017")
 dev.off()
 
+png("2023.png") #2023
+plot(gcclass23, col=cl, main= "2023")
+dev.off()
 
 # Creo un frame di dati con le percentuali solo per la categoria "Neve"
 dati_neve <- data.frame(
@@ -349,7 +368,7 @@ grafico_neve <- ggplot(data = dati_neve, aes(x = Anno, y = Percentuale_Neve, fil
 print(grafico_neve)
 
 # Esporto il grafico
-pdf("percentuale neve.pdf")
+png("percentuale neve.png")
 ggplot(data = dati_neve, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
   geom_bar(stat = "identity", position = "dodge") +  
   labs(x = "Anno", y = "Percentuale di Neve", title = "Confronto Percentuale di Neve tra 2017 e 2023") +  
