@@ -84,10 +84,10 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 
 \begin{frame}{\textbf{Importazione e visualizzazione delle immagini Sentinel 2}}
 \begin{itemize}
-    \item Download immagini da {\href{https://scihub.copernicus.eu/dhus/#/home}{Copernicus}}
+    \item Download immagini da {\href{https://browser.dataspace.copernicus.eu}{Copernicus}}
     \item \pause Importazione in R
     \item \pause Ritaglio dell'area di studio
-    \item \pause Visualizzazione delle immagini in Colori Naturali e le bande rosso, verde, blu, NIR e SWIR
+    \item \pause Visualizzazione delle immagini in Colori Naturali e SWIR
 \end{itemize}
 \end{frame}
 
@@ -95,7 +95,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \begin{frame}{Area di studio}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{marmolada2017.png}
+    \includegraphics[width=0.6\textwidth]{marmolada2017.png}
     \caption{Area di studio}
     \label{fig:enter-label}
 \end{figure}
@@ -108,7 +108,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{marmolada 2017.png}
-    \caption{2017 - Colori reali}
+    \caption{2017- Colori reali}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
@@ -116,7 +116,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{SWIR 2017.png}
-    \caption{2017 - SWIR}
+    \caption{2017- SWIR}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
@@ -149,96 +149,60 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 
 
 
-\subsection{Calcolo e visualizzazione dell' indice spettrale -NDSI}
+\subsection{Calcolo e visualizzazione dell' indice spettrale - NDSI}
 
-\begin{frame}{\textbf{Calcolo e visualizzazione degli indici spettrali}}
+\begin{frame}{\textbf{Calcolo e visualizzazione dell' indice spettrale}}
 \begin{itemize}
-    \item Scelta degli indici spettrali
-    \item \pause Calcolo de indici spettrali
-    \item \pause Calcolo della differenza degli indici fra 2018 e 2023 
+    \item Scelta dell' indice spettrale
+    \item \pause Calcolo dell' indice spettrale
+    \item \pause Calcolo della differenza dell'indice fra il 2017 e 2023 
     \item \pause Plot dei risultati
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\textbf{Scelta degli ndici spettrali}}
+\begin{frame}{\textbf{Scelta dell' indice spettrale}}
 \begin{itemize}
-    \item \textbf{NDVI}(\textit{Normalized Difference Vegetation Index}): utilizza le bande del \textbf{rosso} e del \textbf{NIR} per fornire informazioni sulla quantità e la densità della vegetazione, nonché sul suo stato di salute
-    \item \textbf{MSAVI} (\textit{Modified Soil-Adjusted Vegetation Index}): indice simile all'NDVI che tiene conto anche dell'effetto del suolo. MSAVI è utile in aree con terreni scoperti o soggetti a cambiamenti stagionali, in quanto corregge l'influenza del suolo sulla misurazione della vegetazione
+    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SwIR} per identificare e mappare la presenza di neve nelle immagini satellitari
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Calcolo degli indici spettrali}
+\begin{frame}{Calcolo dell' indice spettrale}
 \begin{itemize}
-    \item \textbf{NDVI}(\textit{Normalized Difference Vegetation Index}):
+    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}):
     \begin{equation}
-        NDVI = \frac{NIR - rosso}{NIR + rosso}
-    \end{equation}
-    \item  \textbf{MSAVI} (\textit{Modified Soil-Adjusted Vegetation Index}):\\
-     \begin{equation}
-        MSAVI = \frac{2*NIR + 1 -\sqrt{(2*NIR + 1)^{2} - 8*(NIR - rosso)}}{2}
+        NDVI = \frac{verde - SWIR}{verde + SWIR}
     \end{equation}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{\textbf{Plot degli indici spettrali: NDVI 2018-2023}}
+\begin{frame}{\textbf{Plot dell' indice spettrale: NDSI 2017-2023}}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{figure}
             \centering
-            \includegraphics[width=0.6\textwidth]{ndvi2018.png}
-            \caption{NDVI 2018}
+            \includegraphics[width=0.5\textwidth]{indice_NDSI_2017.png}
+            \caption{NDVI 2017}
         \label{fig:enter-label}
         \end{figure}\\
         \begin{figure}
             \centering
-            \includegraphics[width=0.6\textwidth]{ndvi2023.png}
-            \caption{NDVI 2023}
+            \includegraphics[width=0.5\textwidth]{indice_NDSI_2023.png}
+            \caption{NDSI 2023}
         \label{fig:enter-label}
         \end{figure}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{figure}
             \centering
-            \includegraphics[width=1\textwidth]{NDVIdef.png}
-            \caption{NDVI - differenza fra 2018 e 2023}
+            \includegraphics[width=1\textwidth]{indice_NDSI_diff.png}
+            \caption{NDSI - differenza fra 2017 e 2023}
         \label{fig:enter-label}
         \end{figure}
         \end{column}
         \end{columns}
 \end{frame}
-
-
-\begin{frame}{\textbf{Plot degli indici spettrali: MSAVI 2018-2023}}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-            \centering
-            \includegraphics[width=0.6\textwidth]{MSAVI2018.png}
-            \caption{MSAVI 2018}
-        \label{fig:enter-label}
-        \end{figure}\\
-        \begin{figure}
-            \centering
-            \includegraphics[width=0.6\textwidth]{ndvi2023.png}
-            \caption{MSAVI 2023}
-        \label{fig:enter-label}
-        \end{figure}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-            \centering
-            \includegraphics[width=1\textwidth]{MSAVIdef.png}
-            \caption{MSAVI - differenza fra 2018 e 2023}
-        \label{fig:enter-label}
-        \end{figure}
-        \end{column}
-        \end{columns}
-\end{frame}
-
-
-
 
 
 \subsection{PCA: \textit{Principal Component Analysis}}
@@ -258,19 +222,28 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 
 
 \begin{frame}{\textbf{PCA: Principal Component Analysis}}
-    \begin{figure}
-            \centering
-            \includegraphics[width=0.8\textwidth]{pca.png}
-            \caption{PC1}
-        \label{fig:enter-label}
-        \end{figure}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{PCA2017.png}
+    \caption{2017 -PCA}
+    \label{fig:enter-label}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{PCA2023.png}
+    \caption{2023 -PCA}
+    \label{fig:enter-label} 
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 
-
-
-
-\subsection{\textit{Land Cover}}
+\subsection{\textit{Classifcazione}}
 
 \begin{frame}{\textbf{Land Cover}}
     \begin{itemize}
@@ -283,37 +256,31 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 
 
 \begin{frame}{\textbf{Land cover: risultati}}
-    \begin{figure}
-            \centering
-            \includegraphics[width=0.8\textwidth]{lc.png}
-            \caption{\textit{Land cover}}
-        \label{fig:enter-label}
-        \end{figure}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{2017.png}
+    \label{fig:enter-label}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{2023.png}
+    \label{fig:enter-label} 
+\end{figure}
+\end{column}
+\end{columns}   
 \end{frame}
 
-
-
-
-
+\begin{frame}{Percentuale neve}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{percentuale neve.png}
+    \caption{Percentuale neve}
+    \label{fig:enter-label}
+\end{figure}  
+\end{frame}
 
 \section{Conclusioni}
-
-
-\begin{frame}{\textbf{Conclusioni}}
-    \begin{itemize}
-        \item Sono state rilevate \textbf{significative differenze} di \textit{land cover}
-        \item \pause Tali differenze potrebbero essere principalmente dovute al \textbf{CoDiRO} a causa della caratteristica monocolturalità dell'area di studio
-        \item \pause Con la PCA sono state rilevate le zone all'interno dell'area di studio soggette a \textbf{maggior vulnerabilità}
-        \item \pause L'analisi statistica di immagini satellitari in R rappresenta un potente strumento per il \textbf{monitoraggio Geo-Ecologico} e la corretta \textbf{gestione degli habitat}
-    \end{itemize}
-\end{frame}
-
-
-\begin{frame}{}
-    \centering \textbf{Grazie per l'attenzione!}
-\end{frame}
-
-
-
-
-\end{document}
