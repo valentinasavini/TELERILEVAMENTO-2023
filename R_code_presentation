@@ -37,11 +37,9 @@
 % Sezione 1: introduzione
 \section{Introduzione}
 
-
 \begin{frame}{\textbf{Scopo dello studio}}
 Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
-
 
 \begin{frame}{\textbf{Scopo dello studio}}
 \begin{itemize}
@@ -59,11 +57,8 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
 
-
-
 % Sezione 2: materiali e metodi
 \section{Materiali e Metodi}
-
 
 \begin{frame}{\textbf{Materiali e Metodi}}
 \begin{itemize}
@@ -74,15 +69,11 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{itemize}
 \end{frame}
 
-
 \begin{frame}{\textbf{Link alla repository}}
 \begin{center}
      \href{https://github.com/breegae/Telerilevamento_2023}{https://github.com/valentinasavini/Telerilevamento\_2023}
 \end{center}
 \end{frame}
-
-
-
 
 
 \subsection{Importazione e visualizzazione delle immagini Sentinel 2}
@@ -150,9 +141,6 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{column}
 \end{columns}
 \end{frame}
-
-
-
 
 
 \subsection{Calcolo e visualizzazione dell'indice spettrale - NDSI}
@@ -298,6 +286,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{itemize}    
 \end{frame}
 
+% Sezione 3: Conclusioni
 \section{Conclusioni}
 
 \begin{frame}{\textbf{Conclusioni}}
