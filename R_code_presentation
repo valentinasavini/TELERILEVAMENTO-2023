@@ -9,9 +9,9 @@
 \usetheme{metropolis}
 
 % Personalizzazione dei colori
-\definecolor{arancione}{RGB}{255, 50, 0}
+\definecolor{azzurro}{RGB}{173, 216, 230}
 \definecolor{bianco}{RGB}{255, 255, 255}
-\setbeamercolor{frametitle}{bg=arancione}
+\setbeamercolor{frametitle}{bg=azzurro}
 \setbeamercolor{alerted text}{fg=bianco}
 
 % Imposta il font predefinito su Helvetica
@@ -155,27 +155,27 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 
 
 
-\subsection{Calcolo e visualizzazione dell' indice spettrale - NDSI}
+\subsection{Calcolo e visualizzazione dell'indice spettrale - NDSI}
 
-\begin{frame}{\textbf{Calcolo e visualizzazione dell' indice spettrale}}
+\begin{frame}{\textbf{Calcolo e visualizzazione dell'indice spettrale}}
 \begin{itemize}
-    \item Scelta dell' indice spettrale
-    \item \pause Calcolo dell' indice spettrale
+    \item Scelta dell'indice spettrale
+    \item \pause Calcolo dell'indice spettrale
     \item \pause Calcolo della differenza dell'indice fra il 2017 e 2023 
     \item \pause Plot dei risultati
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\textbf{Scelta dell' indice spettrale}}
+\begin{frame}{\textbf{Scelta dell'indice spettrale}}
 \begin{itemize}
-    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SwIR} per identificare e mappare la presenza di neve nelle immagini satellitari
+    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SwIR} per identificare e mappare la presenza di neve dalle immagini satellitari
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Calcolo dell' indice spettrale}
+\begin{frame}{Calcolo dell'indice spettrale}
 \begin{itemize}
-    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}):
+    \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}):
     \begin{equation}
         NDVI = \frac{verde - SWIR}{verde + SWIR}
     \end{equation}
@@ -183,7 +183,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \end{frame}
 
 
-\begin{frame}{\textbf{Plot dell' indice spettrale: NDSI 2017-2023}}
+\begin{frame}{\textbf{Plot dell'indice spettrale: NDSI 2017-2023}}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{figure}
@@ -233,7 +233,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{PCA2017.png}
-    \caption{2017 -PCA}
+    \caption{2017 - PCA}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
@@ -241,7 +241,7 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{PCA2023.png}
-    \caption{2023 -PCA}
+    \caption{2023 - PCA}
     \label{fig:enter-label} 
 \end{figure}
 \end{column}
@@ -289,8 +289,16 @@ Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
 \end{figure}  
 \end{frame}
 
-\section{Conclusioni}
+\begin{frame}{Percentuale neve persa}
+\textbf{Tenendo in considerazione che l'indice NDSI analizza la presenza di neve e non lo spessore:}
+\begin{itemize}    
+    \item Nel 2017 secondo lo studio la percentuale di neve occupava il 15\% dell'area esaminata
+    \item Nel 2023 secondo lo studio la percentuale di neve occupava il 8\% dell'area esaminata
+    \item Con una perdità del 7\% rispetto l'area esaminata
+\end{itemize}    
+\end{frame}
 
+\section{Conclusioni}
 
 \begin{frame}{\textbf{Conclusioni}}
     \begin{itemize}
