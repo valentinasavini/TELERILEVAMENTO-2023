@@ -28,7 +28,7 @@ library(rasterVis)
 setwd("C:/lab/esame/")
 
 
-####### 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI Sentinel2 ######
+################ 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI Sentinel2 ################
 
 
 # Importo immagini (funzione stack())
@@ -43,7 +43,11 @@ marm2017
 # resolution : 10.00233, 9.999211  (x, y)
 # extent     : 1310532, 1328036, 5844796, 5857045  (xmin, xmax, ymin, ymax)
 # crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.1, X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.2, X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.3, X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B08_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw. 
+# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.1,
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.2, 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.3, 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B08_.Raw., 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw. 
 
 marm2023
 # class      : RasterStack 
@@ -51,16 +55,21 @@ marm2023
 # resolution : 10.00233, 9.999211  (x, y)
 # extent     : 1310532, 1328036, 5844796, 5857045  (xmin, xmax, ymin, ymax)
 # crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.1, X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.2, X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.3, X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B08_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw. 
+# names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.1, 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.2, 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.3, 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B08_.Raw., 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw. 
 
 
 # Modifico i nomi dei layer considerando:
-# BANDA 1 = RED
-# BANDA 2 = GREEN
-# BANDA 3 = BLUE
-# BANDA 8 = NIR
-# BANDA 11 = SWIR
+# BANDA 1 = RED 
+# BANDA 2 = GREEN 
+# BANDA 3 = BLUE 
+# BANDA 8 = NIR 
+# BANDA 11 = SWIR 
 # funzione names()
+
 # 2017
 names(marm2017) <- c("b1_rossa", "b2_verde", "b3_blu", "b4_NIR", "b5_SWIR") 
 names(marm2017) # controllo
@@ -82,7 +91,7 @@ plotRGB(marm2023, 1, 2, 3, stretch= "lin")
 dev.off()
 
 
-# Esporto immagini 
+# Esporto immagini (funzione pdf("nome.pdf"))
 pdf("bande2017.pdf") # pdf
 plot(marm2017)
 dev.off()
@@ -92,7 +101,7 @@ plot(marm2023)
 dev.off()
 
 # Ritaglio sull'are di interesse
-ext <- c(1315500, 1325000, 5849000, 5854000) 
+ext <- c(1315500, 1325000, 5849000, 5854000) #creo vettore contente le coordinate di interesse
 
 # 2017
 marm17 <- crop(marm2017, ext) # taglio l'area d'interesse
@@ -134,7 +143,7 @@ plot(marm23[[5]])
 dev.off()
 
 
-######### 2. CALCOLO E PLOT INDICI SPETTRALI ###########
+################ 2. CALCOLO E PLOT INDICI SPETTRALI ################
 
 # Calcolo l'indice NSDI - Normalized Difference Snow Index
 # per identificare e mappare la presenza di neve nelle immagini satellitari
@@ -203,7 +212,7 @@ t_resultNDSI
 # 0.02237135 
 
 
-########## 3. PCA #######
+################ 3. PCA ################
 # PCA (Principal Component Analysis)
 RGB_2017 <- stack(marm17[[1]], marm17[[2]], marm17[[3]])
 RGB_2023 <- stack(marm23[[1]], marm23[[2]], marm23[[3]])
@@ -277,7 +286,7 @@ ggplot()+
   labs(title = "PCI1 2023")
 dev.off()
 
-########## 4. CLASSIFICAZIONE ########
+################ 4. CLASSIFICAZIONE ################
 # 2017
 # 1. Trasformare l'immagine in serie di valori continui con funzione
 # getValues
@@ -375,4 +384,3 @@ ggplot(data = dati_neve, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
   theme_minimal() +  
   scale_fill_manual(values = c("2017" = "lightblue", "2023" = "lightgreen"))
 dev.off()
-
