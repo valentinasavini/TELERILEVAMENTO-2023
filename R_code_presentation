@@ -17,7 +17,7 @@
 % Imposta il font predefinito su Helvetica
 \renewcommand{\familydefault}{\sfdefault}
 
-\title{\textbf{Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada}}
+\title{\textbf{Monitoraggio dello scioglimento del Ghiacciaio della Marmolada}}
 \subtitle{Progetto di Telerilevamento Geo-Ecologico - 93457}
 \author{Valentina Savini}
 %\date{}
@@ -39,7 +39,7 @@
 
 
 \begin{frame}{\textbf{Scopo dello studio}}
-Monitoraggio dello sciogliemento del Ghiacciaio della Marmolada
+Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
 
