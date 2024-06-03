@@ -32,14 +32,14 @@
 
 
 
-
-
 % Sezione 1: introduzione
 \section{Introduzione}
+
 
 \begin{frame}{\textbf{Scopo dello studio}}
 Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
+
 
 \begin{frame}{\textbf{Scopo dello studio}}
 \begin{itemize}
@@ -51,29 +51,36 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 
 \begin{frame}{Date delle immagini}
 \begin{itemize}
-    \item immagine 1 : 27.08.2017  
-    \item immagine 2 : 11.08.2023
+    \item Immagine 1 : 27.08.2017  
+    \item Immagine 2 : 11.08.2023
 \end{itemize}
 \end{frame}
 
 
+
+
 % Sezione 2: materiali e metodi
 \section{Materiali e Metodi}
+
 
 \begin{frame}{\textbf{Materiali e Metodi}}
 \begin{itemize}
     \item Importazione e visualizzazione delle immagini \textbf{Sentinel 2}
     \item \pause Calcolo e visualizzazione dell' \textbf{indice spettrale}
     \item \pause \textbf{PCA}: \textit{Principal Component Analysis}
-    \item \pause \textbf{Classificazione} della percentuale di neve
+    \item \pause \textbf{Land cover} - percentuale di neve
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}{\textbf{Link alla repository}}
 \begin{center}
      \href{https://github.com/breegae/Telerilevamento_2023}{https://github.com/valentinasavini/Telerilevamento\_2023}
 \end{center}
 \end{frame}
+
+
+
 
 
 \subsection{Importazione e visualizzazione delle immagini Sentinel 2}
@@ -143,6 +150,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
 
+
 \subsection{Calcolo e visualizzazione dell'indice spettrale - NDSI}
 
 \begin{frame}{\textbf{Calcolo e visualizzazione dell'indice spettrale}}
@@ -156,7 +164,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 
 \begin{frame}{\textbf{Scelta dell'indice spettrale}}
 \begin{itemize}
-    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SwIR} per identificare e mappare la presenza di neve dalle immagini satellitari
+    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SWIR} per identificare e mappare la presenza di neve dalle immagini satellitari
 \end{itemize}
 \end{frame}
 
@@ -165,7 +173,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{itemize}
     \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}):
     \begin{equation}
-        NDVI = \frac{verde - SWIR}{verde + SWIR}
+        NDSI = \frac{verde - SWIR}{verde + SWIR}
     \end{equation}
 \end{itemize}
 \end{frame}
@@ -177,7 +185,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
             \begin{figure}
             \centering
             \includegraphics[width=0.5\textwidth]{indice_NDSI_2017.png}
-            \caption{NDVI 2017}
+            \caption{NDSI 2017}
         \label{fig:enter-label}
         \end{figure}\\
         \begin{figure}
@@ -237,7 +245,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
 
-\subsection{\textit{Classifcazione}}
+\subsection{\textit{Land cover - percentuale neve}}
 
 \begin{frame}{\textbf{Land Cover}}
     \begin{itemize}
@@ -286,7 +294,6 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{itemize}    
 \end{frame}
 
-% Sezione 3: Conclusioni
 \section{Conclusioni}
 
 \begin{frame}{\textbf{Conclusioni}}
@@ -302,10 +309,6 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{}
     \centering \textbf{Grazie per l'attenzione!}
 \end{frame}
-
-
-
-
 
 
 \end{document}
