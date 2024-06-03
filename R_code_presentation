@@ -3,7 +3,6 @@
 \usepackage{hyperref}
 \usepackage{caption}
 
-
 \setlength{\abovecaptionskip}{5pt}
 
 \usetheme{metropolis}
@@ -20,7 +19,7 @@
 \title{\textbf{Monitoraggio dello scioglimento del Ghiacciaio della Marmolada}}
 \subtitle{Progetto di Telerilevamento Geo-Ecologico - 93457}
 \author{Valentina Savini}
-%\date{}
+\date{}
 
 \begin{document}
 \maketitle
@@ -30,18 +29,14 @@
 \tableofcontents
 \end{frame}
 
-
-
 % Sezione 1: introduzione
 \section{Introduzione}
-
 
 \begin{frame}{\textbf{Scopo dello studio}}
 Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
-
-\begin{frame}{\textbf{Scopo dello studio}}
+\begin{frame}{\textbf{Obiettivi dello studio}}
 \begin{itemize}
     \item Acquisizione di immagini satellitari \textbf{Sentinel 2} (2017-2023)
     \item \pause Calcolo dell'indice spettrale \textbf{NDSI} utilizzando R
@@ -49,19 +44,15 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Date delle immagini}
+\begin{frame}{\textbf{Date delle immagini}}
 \begin{itemize}
-    \item Immagine 1 : 27.08.2017  
-    \item Immagine 2 : 11.08.2023
+    \item Immagine 1: 27.08.2017  
+    \item Immagine 2: 11.08.2023
 \end{itemize}
 \end{frame}
 
-
-
-
 % Sezione 2: materiali e metodi
 \section{Materiali e Metodi}
-
 
 \begin{frame}{\textbf{Materiali e Metodi}}
 \begin{itemize}
@@ -72,31 +63,24 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{itemize}
 \end{frame}
 
-
 \begin{frame}{\textbf{Link alla repository}}
 \begin{center}
-     \href{https://github.com/breegae/Telerilevamento_2023}{https://github.com/valentinasavini/Telerilevamento\_2023}
+     \href{https://github.com/valentinasavini/Telerilevamento_2023}{https://github.com/valentinasavini/Telerilevamento\_2023}
 \end{center}
 \end{frame}
 
-
-
-
-
 \subsection{Importazione e visualizzazione delle immagini Sentinel 2}
-
 
 \begin{frame}{\textbf{Importazione e visualizzazione delle immagini Sentinel 2}}
 \begin{itemize}
-    \item Download immagini da {\href{https://browser.dataspace.copernicus.eu}{Copernicus}}
+    \item Download immagini da \href{https://browser.dataspace.copernicus.eu}{Copernicus}
     \item \pause Importazione in R
     \item \pause Ritaglio dell'area di studio
     \item \pause Visualizzazione delle immagini in Colori Naturali e SWIR
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Area di studio}
+\begin{frame}{\textbf{Area di studio}}
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{marmolada2017.png}
@@ -105,14 +89,13 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{figure}
 \end{frame}
 
-
-\begin{frame}{2017}
+\begin{frame}{\textbf{2017}}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{marmolada 2017.png}
-    \caption{2017- Colori reali}
+    \caption{2017 - Colori reali}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
@@ -120,15 +103,14 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{SWIR 2017.png}
-    \caption{2017- SWIR}
+    \caption{2017 - SWIR}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
-
-\begin{frame}{2023}
+\begin{frame}{\textbf{2023}}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{figure}
@@ -149,8 +131,6 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{columns}
 \end{frame}
 
-
-
 \subsection{Calcolo e visualizzazione dell'indice spettrale - NDSI}
 
 \begin{frame}{\textbf{Calcolo e visualizzazione dell'indice spettrale}}
@@ -164,64 +144,60 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 
 \begin{frame}{\textbf{Scelta dell'indice spettrale}}
 \begin{itemize}
-    \item \textbf{NDSI}(\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SWIR} per identificare e mappare la presenza di neve dalle immagini satellitari
+    \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SWIR} per identificare e mappare la presenza di neve dalle immagini satellitari
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Calcolo dell'indice spettrale}
+\begin{frame}{\textbf{Calcolo dell'indice spettrale}}
 \begin{itemize}
     \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}):
     \begin{equation}
-        NDSI = \frac{verde - SWIR}{verde + SWIR}
+        NDSI = \frac{\text{verde} - \text{SWIR}}{\text{verde} + \text{SWIR}}
     \end{equation}
 \end{itemize}
 \end{frame}
 
-
 \begin{frame}{\textbf{Plot dell'indice spettrale: NDSI 2017-2023}}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
             \centering
             \includegraphics[width=0.5\textwidth]{indice_NDSI_2017.png}
             \caption{NDSI 2017}
-        \label{fig:enter-label}
-        \end{figure}\\
+            \label{fig:enter-label}
+        \end{figure}
         \begin{figure}
             \centering
             \includegraphics[width=0.5\textwidth]{indice_NDSI_2023.png}
             \caption{NDSI 2023}
-        \label{fig:enter-label}
+            \label{fig:enter-label}
         \end{figure}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
             \centering
             \includegraphics[width=1\textwidth]{indice_NDSI_diff.png}
             \caption{NDSI - differenza fra 2017 e 2023}
-        \label{fig:enter-label}
+            \label{fig:enter-label}
         \end{figure}
-        \end{column}
-        \end{columns}
+    \end{column}
+\end{columns}
 \end{frame}
-
 
 \subsection{PCA: \textit{Principal Component Analysis}}
 
 \begin{frame}{\textbf{PCA: Principal Component Analysis}}
+\begin{itemize}
+    \item Tecnica statistica che riduce la complessità dei dati identificando nuove variabili (componenti principali)
+    \item \pause Combinazioni lineari di variabili che catturano la massima varianza possibile nelle nuove componenti principali
+    \item \pause I dati possono essere plottati nello spazio delle componenti principali, permettendo di visualizzare i modelli di variazione in modo semplificato
+    \item \pause Il plot restituisce indicazioni sulle aree caratterizzate da maggior varianza, permettendo di identificare:
     \begin{itemize}
-        \item Tecnica statistica che riduce la complessità dei dati identificando nuove variabili (componenti principali)
-        \item \pause Combinazioni lineari di variabili che catturano la massima varianza possibile nelle nuove componenti principali
-        \item \pause  I dati possono essere plottati nello spazio delle componenti principali, permettendo di visualizzare i modelli di variazione in modo semplificato
-        \item \pause Il plot restituisce indicazioni sulle aree caratterizzate da maggior varianza, permettendo di identificare:
-        \begin{itemize}
-            \item Zone ad \textbf{elevata vulnerabilità}
-            \item Possibili \textbf{pattern ambientali}
-        \end{itemize}
+        \item Zone ad \textbf{elevata vulnerabilità}
+        \item Possibili \textbf{pattern ambientali}
     \end{itemize}
+\end{itemize}
 \end{frame}
-
 
 \begin{frame}{\textbf{PCA: Principal Component Analysis}}
 \begin{columns}
@@ -238,24 +214,22 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
     \centering
     \includegraphics[width=1\textwidth]{PCA2023.png}
     \caption{2023 - PCA}
-    \label{fig:enter-label} 
+    \label{fig:enter-label}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
-
 \subsection{\textit{Land cover - percentuale neve}}
 
 \begin{frame}{\textbf{Land Cover}}
-    \begin{itemize}
-        \item Classificazione delle immagini Sentinel 2
-        \item \pause Calcolo delle frequenze e delle percentuali di \textit{land cover}
-        \item \pause Creazione di un dataframe con i risultati ottenuti
-        \item \pause Plot dei risultati
-    \end{itemize}
+\begin{itemize}
+    \item Classificazione delle immagini Sentinel 2
+    \item \pause Calcolo delle frequenze e delle percentuali di \textit{land cover}
+    \item \pause Creazione di un dataframe con i risultati ottenuti
+    \item \pause Plot dei risultati
+\end{itemize}
 \end{frame}
-
 
 \begin{frame}{\textbf{Land cover: risultati}}
 \begin{columns}
@@ -270,45 +244,43 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{2023.png}
-    \label{fig:enter-label} 
+    \label{fig:enter-label}
 \end{figure}
 \end{column}
-\end{columns}   
+\end{columns}
 \end{frame}
 
-\begin{frame}{Percentuale neve}
+\begin{frame}{\textbf{Percentuale neve}}
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{percentuale neve.png}
     \caption{Percentuale neve}
     \label{fig:enter-label}
-\end{figure}  
+\end{figure}
 \end{frame}
 
-\begin{frame}{Percentuale neve persa}
+\begin{frame}{\textbf{Percentuale neve persa}}
 \textbf{Tenendo in considerazione che l'indice NDSI analizza la presenza di neve e non lo spessore:}
-\begin{itemize}    
+\begin{itemize}
     \item Nel 2017 secondo lo studio la percentuale di neve occupava il 15\% dell'area esaminata
-    \item Nel 2023 secondo lo studio la percentuale di neve occupava il 8\% dell'area esaminata
-    \item Con una perdità del 7\% rispetto l'area esaminata
-\end{itemize}    
+    \item Nel 2023 secondo lo studio la percentuale di neve occupava l'8\% dell'area esaminata
+    \item Con una perdita del 7\% nell'area esaminata
+\end{itemize}
 \end{frame}
 
 \section{Conclusioni}
 
 \begin{frame}{\textbf{Conclusioni}}
-    \begin{itemize}
-        \item Sono state rilevate \textbf{significative differenze} di \textit{land cover}
-        \item \pause Tali differenze potrebbero essere principalmente dovute al \textbf{riscandamento globale} 
-        \item \pause Con la PCA sono state rilevate le zone all'interno dell'area di studio soggette a \textbf{maggior vulnerabilità}
-        \item \pause L'analisi statistica di immagini satellitari in R rappresenta un potente strumento per il \textbf{monitoraggio Geo-Ecologico} e per un aumento della \textbf{sensibilizzazione}
-    \end{itemize}
+\begin{itemize}
+    \item Sono state rilevate \textbf{significative differenze} di \textit{land cover}
+    \item \pause Tali differenze potrebbero essere principalmente dovute al \textbf{riscaldamento globale} 
+    \item \pause Con la PCA sono state rilevate le zone all'interno dell'area di studio soggette a \textbf{maggior vulnerabilità}
+    \item \pause L'analisi statistica di immagini satellitari in R rappresenta un potente strumento per il \textbf{monitoraggio Geo-Ecologico} e per un aumento della \textbf{sensibilizzazione}
+\end{itemize}
 \end{frame}
-
 
 \begin{frame}{}
     \centering \textbf{Grazie per l'attenzione!}
 \end{frame}
-
 
 \end{document}
