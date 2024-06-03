@@ -68,7 +68,6 @@ marm2023
 # BANDA 3 = BLUE 
 # BANDA 8 = NIR 
 # BANDA 11 = SWIR 
-# funzione names()
 
 # 2017
 names(marm2017) <- c("b1_rossa", "b2_verde", "b3_blu", "b4_NIR", "b5_SWIR") 
@@ -80,14 +79,14 @@ names(marm2023) # controllo
 
 
 # Plot immagini (funzione plot())
-plot(marm2017)
-plot(marm2023)
+plot(marm2017) #2017
+plot(marm2023) #2023
 dev.off() # per eliminare i plot
 
 # Plot immagini con colori naturali (funzione plotRGB())
 par(mfrow = c(2, 1))
-plotRGB(marm2017, 1, 2, 3, stretch= "lin")
-plotRGB(marm2023, 1, 2, 3, stretch= "lin")
+plotRGB(marm2017, 1, 2, 3, stretch= "lin") #2017
+plotRGB(marm2023, 1, 2, 3, stretch= "lin") #2023
 dev.off()
 
 
@@ -100,7 +99,7 @@ pdf("bande2023.pdf")
 plot(marm2023)
 dev.off()
 
-# Ritaglio sull'are di interesse
+# Ritaglio sull'area di interesse
 ext <- c(1315500, 1325000, 5849000, 5854000) #creo vettore contente le coordinate di interesse
 
 # 2017
@@ -220,7 +219,7 @@ RGB_2023 <- stack(marm23[[1]], marm23[[2]], marm23[[3]])
 # Imposto il seme per la riproducibilità
 set.seed(1)
 
-# Plor delle immagini RGB per il 2017 e il 2023
+# Plot delle immagini RGB per il 2017 e il 2023
 plot(RGB_2017, main= "2017")
 plot(RGB_2023, main= "2023")
 
@@ -286,7 +285,7 @@ ggplot()+
   labs(title = "PCI1 2023")
 dev.off()
 
-################ 4. CLASSIFICAZIONE ################
+################ 4. CLASSIFICAZIONE - LAND COVER ################
 # 2017
 # 1. Trasformare l'immagine in serie di valori continui con funzione
 # getValues
