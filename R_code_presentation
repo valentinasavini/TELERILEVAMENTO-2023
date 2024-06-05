@@ -240,9 +240,9 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{figure}
 \end{frame}
 
-\subsection{\textit{Snow cover - percentuale neve}}
+\subsection{\textit{Classificazione - Snow Cover}}
 
-\begin{frame}{\textbf{Snow Cover}}
+\begin{frame}{\textbf{Classificazione - Snow Cover}}
 \begin{itemize}
     \item Classificazione delle immagini Sentinel 2
     \item \pause Calcolo delle frequenze e delle percentuali di \textit{snow cover}
