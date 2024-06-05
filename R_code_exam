@@ -7,7 +7,7 @@
 # 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI 
 # 2. CALCOLO E PLOT INDICI SPETTRALI
 # 3. PCA
-# 4. LAND COVER
+# 4. SNOW COVER - CLASSIFICAZIONE
 
 
 # Installo i pacchetti di interesse
@@ -30,356 +30,491 @@ setwd("C:/lab/esame/")
 
 ################ 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI Sentinel2 ################
 
-
-# Importo immagini (funzione stack())
-marm2017 <- stack("2017-08-27-00_00_2017-08-27-23_59_Sentinel-2_L2A_True_color.tiff", "2017-08-27-00_00_2017-08-27-23_59_Sentinel-2_L2A_B08_(Raw).tiff", "2017-08-27-00_00_2017-08-27-23_59_Sentinel-2_L2A_B11_(Raw).tiff")
-marm2023 <- stack("2023-08-11-00_00_2023-08-11-23_59_Sentinel-2_L2A_True_color.tiff", "2023-08-11-00_00_2023-08-11-23_59_Sentinel-2_L2A_B08_(Raw).tiff", "2023-08-11-00_00_2023-08-11-23_59_Sentinel-2_L2A_B11_(Raw).tiff")
-
-
-# Visualizzo le informazioni
-marm2017
-# class      : RasterStack 
-# dimensions : 1225, 1750, 2143750, 5  (nrow, ncol, ncell, nlayers)
-# resolution : 10.00233, 9.999211  (x, y)
-# extent     : 1310532, 1328036, 5844796, 5857045  (xmin, xmax, ymin, ymax)
-# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.1,
-# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.2, 
-# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_True_color_1.3, 
-# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B08_.Raw., 
-# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw. 
-
-marm2023
-# class      : RasterStack 
-# dimensions : 1225, 1750, 2143750, 5  (nrow, ncol, ncell, nlayers)
-# resolution : 10.00233, 9.999211  (x, y)
-# extent     : 1310532, 1328036, 5844796, 5857045  (xmin, xmax, ymin, ymax)
-# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.1, 
-# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.2, 
-# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_True_color_1.3, 
-# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B08_.Raw., 
-# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw. 
-
-
-# Modifico i nomi dei layer considerando:
-# BANDA 1 = RED 
-# BANDA 2 = GREEN 
-# BANDA 3 = BLUE 
-# BANDA 8 = NIR 
-# BANDA 11 = SWIR 
-
 # 2017
-names(marm2017) <- c("b1_rossa", "b2_verde", "b3_blu", "b4_NIR", "b5_SWIR") 
-names(marm2017) # controllo
+# Elenco tutti i file nella directory corrente che contengono "2017-08-27" nei loro nomi
+rlist<- list.files(pattern = "2017-08-27") 
+
+# Importo ciascun file in rlist come un oggetto raster e memorizzo questi oggetti in una lista
+import <- lapply(rlist, raster) 
+
+# Combino tutti gli oggetti raster in un singolo oggetto RasterStack - funzione lapply()
+marm2017 <- stack(import) 
+
+# Visualizzo l'oggetto RasterStack risultante
+marm2017 
+# class      : RasterStack 
+# dimensions : 612, 875, 535500, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 20.00466, 20.01476  (x, y)
+# extent     : 1312194, 1329699, 5846191, 5858440  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B02_.Raw., 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B03_.Raw., 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B04_.Raw., 
+# X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw., 
+#X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B8A_.Raw.
 
 # 2023
-names(marm2023) <- c("b1_rossa", "b2_verde", "b3_blu", "B4_NIR", "b5_SWIR") 
-names(marm2023) # controllo
+# Elenco tutti i file nella directory corrente che contengono "2023-08-11" nei loro nomi
+rlist<- list.files(pattern = "2023-08-11") 
 
+# Importo ciascun file in rlist come un oggetto raster e memorizzo questi oggetti in una lista
+import <- lapply(rlist, raster) 
 
-# Plot immagini (funzione plot())
-plot(marm2017) #2017
-plot(marm2023) #2023
-dev.off() # per eliminare i plot
+# Combino tutti gli oggetti raster in un singolo oggetto RasterStack - funzione lapply()
+marm2023 <- stack(import) 
 
-# Plot immagini con colori naturali (funzione plotRGB())
-par(mfrow = c(2, 1))
-plotRGB(marm2017, 1, 2, 3, stretch= "lin") #2017
-plotRGB(marm2023, 1, 2, 3, stretch= "lin") #2023
-dev.off()
+# Visualizzo l'oggetto RasterStack risultante
+marm2023
+# class      : RasterStack 
+# dimensions : 612, 875, 535500, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 1312194, 1329699, 5846191, 5858440  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+#names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B02_.Raw., 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B03_.Raw., 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B04_.Raw., 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw., 
+# X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B8A_.Raw
 
-
-# Esporto immagini (funzione pdf("nome.pdf"))
-pdf("bande2017.pdf") # pdf
-plot(marm2017)
-dev.off()
-
-pdf("bande2023.pdf")
-plot(marm2023)
-dev.off()
 
 # Ritaglio sull'area di interesse
-ext <- c(1315500, 1325000, 5849000, 5854000) #creo vettore contente le coordinate di interesse
+ext <- c(1318500, 1323000, 5850000, 5852000) #creo vettore contente le coordinate di interesse
 
 # 2017
 marm17 <- crop(marm2017, ext) # taglio l'area d'interesse
 marm17
+# class      : RasterBrick 
+# dimensions : 250, 475, 118750, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 20.00466, 20.01476  (x, y)
+# extent     : 1315495, 1324997, 5848993, 5853996  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+# source     : memory
+# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B02_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B03_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B04_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B8A_.Raw. 
+# min values :                                                      0.0000,                                                      0.0000,                                                      0.0000,                                                      0.0058,                                                      0.0000 
+# max values :                                                      1.1976,                                                      1.2184,                                                      1.2528,                                                      1.5527,                                                      1.3427 
 
 # 2023
 marm23 <- crop(marm2023, ext) # taglio l'area d'interesse
 marm23
+# class      : RasterBrick 
+# dimensions : 250, 475, 118750, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 20.00466, 20.01476  (x, y)
+# extent     : 1315495, 1324997, 5848993, 5853996  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+# source     : memory
+# names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B02_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B03_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B04_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B8A_.Raw. 
+# min values :                                                      0.0000,                                                      0.0000,                                                      0.0000,                                                      0.0048,                                                      0.0000 
+# max values :                                                      1.4000,                                                      1.5312,                                                      1.5736,                                                      1.6021,                                                      1.3963 
 
 
-# Plot immagini
+# Visualizzo le bande
 plot(marm17)
 plot(marm23)
 dev.off()
 
-# Plot immagini con colori naturali
-par(mfrow= c(2,1))
-plotRGB(marm17, 1,2,3, stretch = "lin", main= "2017") # 2017
-plotRGB(marm23, 1,2,3, stretch = "lin", main= "2023") #2023
+# Modifico i nomi dei layer considerando:
+# BANDA 2 =   blu
+# BANDA 3 = verde 
+# BANDA 4 = rosso
+# BANDA 11 = SWIR
+# BANDA 8 = NIR 
+
+# 2017
+names(marm17) <- c("b_blu", "b_verde", "b_rosso","b_SWIR", "b_NIR" ) 
+names(marm17) # controllo
+
+# 2023
+names(marm23) <- c("b_rossa", "b_verde", "b_blu", "b_SWIR", "b_NIR") 
+names(marm23) # controllo
+
+
+# Plot immagini con colori naturali (funzione plotRGB())
+par(mfrow = c(2, 1))
+plotRGB(marm17, 3, 2, 1, stretch= "lin") #2017
+plotRGB(marm23, 3, 2, 1, stretch= "lin") #2023
 dev.off()
 
-
-# Esporto immagini a colori
-png("marmolada 2017.png") # 2017
-plotRGB(marm17, 1,2,3, stretch = "lin", main= "2017") 
+# Esporto immagini a color (funzione png("nome.pdf"))
+png("2017.png") # 2017
+plotRGB(marm17, 3,2,1, stretch="lin")
 dev.off()
 
-png("marmolada 2023.png") #2023
-plotRGB(marm23, 1,2,3, stretch = "lin", main= "2023") 
+png("2023.png") # 2023
+plotRGB(marm23, 3,2,1, stretch = "lin") 
 dev.off()
 
-# Esporto banda SWIR
-png("SWIR 2017.png") # 2017
-plot(marm17[[5]]) 
+# Esporto banda SWIR - neve riflette meglio nella banda SWIR
+png("SWIR_2017.png") # 2017
+plotRGB(marm17, 4,2,1, stretch = "lin")
 dev.off()
 
-png("SWIR 2023.png") #2023
-plot(marm23[[5]]) 
+png("SWIR_2023.png") #2023
+plotRGB(marm23, 4,2,1, stretch = "lin")
 dev.off()
 
 
 ################ 2. CALCOLO E PLOT INDICI SPETTRALI ################
 
+################ a. NDSI index ################ 
 # Calcolo l'indice NSDI - Normalized Difference Snow Index
 # per identificare e mappare la presenza di neve nelle immagini satellitari
 # NDSI= Green - SWIR / Green + SWIR
 # range: -1 - 1
 
-#2017
-NDSI17 <- ((marm17[[2]]-marm17[[5]])/(marm17[[2]]+marm17[[5]]))
+# 2017
+NDSI_17 <- ((marm17[[2]]-marm17[[4]])/(marm17[[2]]+marm17[[4]]))
 
 # 2023
-NDSI23 <- ((marm23[[2]]-marm23[[5]])/(marm23[[2]]+marm23[[5]]))
+NDSI_23 <- ((marm23[[2]]-marm23[[4]])/(marm23[[2]]+marm23[[4]]))
+
+# Analisi temporale 2017-2023
+NDSI_diff <- NDSI_17 - NDSI_23
+
+# Normalizzo
+NDSI_17_min <- minValue(NDSI_17)
+NDSI_17_max <- maxValue(NDSI_17)
+NDSI_23_min <- minValue(NDSI_23)
+NDSI_23_max <- maxValue(NDSI_23)
+NDSI_diff_min <- minValue(NDSI_diff)
+NDSI_diff_max <- maxValue(NDSI_diff)
+
+NDSI17_n <- (NDSI_17 - NDSI_17_min) / (NDSI_17_max - NDSI_17_min) * 2 - 1
+NDSI23_n <- (NDSI_23 - NDSI_23_min) / (NDSI_23_max - NDSI_23_min) * 2 - 1
+NDSI_diff_n <- (NDSI_diff - NDSI_diff_min) / (NDSI_diff_max - NDSI_diff_min) * 2 - 1
 
 
 # Creo palette colori
-cl <- colorRampPalette(c("blue", "black", "yellow"))(100)
+cl <- colorRampPalette(c("black","red","blue","white"))(100)
 
 # Plot
-par(mfrow = c(2,1))
-plot(NDSI17, col= cl) +
+par(mfrow = c(1,3))
+plot(NDSI17_n, col= cl) +
   title(main = "NDSI 2017")
-plot(NDSI23, col= cl) +
+plot(NDSI17_n, col= cl) +
   title(main = "NDSI 2023")
+plot(NDSI_diff_n, col=cl)+
+  title(main = "NDSI diff")# (*)
+
 dev.off()
 
-# GIALLO: aree che indicano la presenza di neve
-
-
-# Analisi temporale 2017-2023
-NDSI_diff <- NDSI17 - NDSI23
-
-# Plot
-plot(NDSI_diff, col=cl)
-# GRIGIO: aree con differenza di NDSI fra 2017 e 2023 nulla
-# BLU: aree con guadagno in neve dal 2017 al 2023
-# GIALLO: aree con perdita in neve dal 2017 al 2023
+# (*)
+# valori alti: aree con perdita in neve dal 2017 al 2023
+# valori medi: aree con differenza di NDSI fra 2017 e 2023 nulla
+# valori bassi: aree con guadagno in neve dal 2017 al 2023
 
 # Salvo le immagini
-png("indice_NDSI_2017.png")
-plot(NDSI17, col=cl) +
+png("NDSI_2017.png")
+plot(NDSI17_n, col=cl) +
   title(main = "NDSI 2017")
 dev.off()
 
-png("indice_NDSI_2023.png")
-plot(NDSI23, col=cl) +
+png("NDSI_2023.png")
+plot(NDSI23_n, col=cl) +
   title(main = "NDSI 2023")
 dev.off()
 
-png("indice_NDSI_diff.png")
-plot(NDSI_diff, col=cl) +
+png("NDSI_diff.png")
+plot(NDSI_diff_n, col=cl) +
   title(main = "differenze NDSI")
 dev.off()
 
 
 # Verifico tramite t_test
-t_resultNDSI <-t.test(NDSI17[], NDSI23[], paired = TRUE)
+t_resultNDSI <-t.test(NDSI17_n[], NDSI23_n[], paired = TRUE)
 t_resultNDSI
 
 # Paired t-test
-# data:  NDSI17[] and NDSI23[]
-# t = 146.77, df = 475448, p-value < 2.2e-16
+
+# data:  NDSI17_n[] and NDSI23_n[]
+# t = 44.007, df = 118749, p-value < 2.2e-16
 # alternative hypothesis: true mean difference is not equal to 0
 # 95 percent confidence interval:
-#   0.0220726 0.0226701
+#  0.01566776 0.01712843
 # sample estimates:
-# mean difference 
-# 0.02237135 
+#   mean difference 
+#0.0163981
+
+################ b. SWI index ################  
+# Calcolo l'indice SWI - Snow Water Index 
+# il quale fornisce un chiaro contrasto tra la neve e altri tipi di caratteristiche, 
+# inclusi i corpi d'acqua
+# SWI = Green * (NIR-SWIR) / (Green + NIR) * (NIR + SWIR) 
+
+# 2017
+SWI_17 <- (marm17[[2]]*(marm17[[5]]-marm17[[4]]))/((marm17[[2]]+marm17[[5]])*(marm17[[5]]+marm17[[4]]))
+
+
+# 2023
+SWI_23 <- (marm23[[2]]*(marm23[[5]]-marm23[[4]]))/((marm23[[2]]+marm23[[5]])*(marm23[[5]]+marm23[[4]]))
+
+# Analisi temporale
+SWI_diff <- SWI_17-SWI_23
+
+# Normalizzo
+SWI_17_min <- minValue(SWI_17)
+SWI_17_max <- maxValue(SWI_17)
+SWI_23_min <- minValue(SWI_23)
+SWI_23_max <- maxValue(SWI_23)
+SWI_diff_min <- minValue(SWI_diff)
+SWI_diff_max <- maxValue(SWI_diff)
+
+SWI17_n <- (SWI_17 - SWI_17_min) / (SWI_17_max - SWI_17_min) * 2 - 1
+SWI23_n <- (SWI_23 - SWI_23_min) / (SWI_23_max - SWI_23_min) * 2 - 1
+SWI_diff_n <- (SWI_diff - SWI_diff_min) / (SWI_diff_max - SWI_diff_min) * 2 - 1
+
+# Plot
+par(mfrow = c(1, 3))
+plot(SWI17_n,
+     col = cl,
+     main = "SWI 2017")
+plot(SWI23_n,
+     col = cl,
+     main = "SWI 2023")
+plot(SWI_diff_n,
+     col = cl,
+     main = "SWI diff") #(*)
+dev.off()
+
+#(*)
+# valori alti: aree con perdita in neve dal 2017 al 2023
+# valori medi: aree con differenza di SWI fra 2017 e 2023 nulla
+# valori bassi: aree con guadagno in neve dal 2017 al 2023
+
+# Salvo le immagini
+png("SWI_2017.png")
+plot(SWI17_n, col=cl) +
+  title(main = "SWI 2017")
+dev.off()
+
+png("SWI_2023.png")
+plot(SWI23_n, col=cl) +
+  title(main = "SWI 2023")
+dev.off()
+
+png("SWI_diff.png")
+plot(SWI_diff_n, col=cl) +
+  title(main = "differenze SWI")
+dev.off()
+
+t_resultSWI <-t.test(SWI17_n[], SWI23_n[], paired = TRUE)
+t_resultSWI
+# data:  SWI17_n[] and SWI23_n[]
+# t = 226.79, df = 118749, p-value < 2.2e-16
+# alternative hypothesis: true mean difference is not equal to 0
+# 95 percent confidence interval:
+#  0.04407303 0.04484144
+# sample estimates:
+#  mean difference 
+# 0.04445723 
+
 
 
 ################ 3. PCA ################
 # PCA (Principal Component Analysis)
-RGB_2017 <- stack(marm17[[1]], marm17[[2]], marm17[[3]])
-RGB_2023 <- stack(marm23[[1]], marm23[[2]], marm23[[3]])
 
 # Imposto il seme per la riproducibilità
 set.seed(1)
 
-# Plot delle immagini RGB per il 2017 e il 2023
-plot(RGB_2017, main= "2017")
-plot(RGB_2023, main= "2023")
+# Carico le differenze degli indici NDSI e SWI in un oggetto raster "box"
+box <- stack(NDSI_diff_n, SWI_diff_n)
 
-# Campione in modo causale 10000 pixel dalle immagini del 2017 e del 2023
-sr <- sampleRandom(RGB_2017, 10000)
-sr23 <- sampleRandom(RGB_2023, 10000)
+# Traccio un grafico delle differenze degli indici
+plot(box, main = "Differenze degli indici",
+     xaxt = "n", yaxt = "n")
 
-# Eseguo la PCA sui campioni causuali del 2017 e del 2023
-PCA17 <- prcomp(sr)
-PCA23 <- prcomp(sr23)
+# Chiudio il dispositivo grafico per evitare conflitti
+dev.off()
 
-# Riepilogo della PCA
-summary(PCA17)
-summary(PCA23)
+# Campionamento casuale di 10.000 punti dal raster "box"
+sr <- sampleRandom(box, 10000)
 
-# Plot delle componenti principali per il 2017 e il 2023
-plot(PCA17)
-plot(PCA23)
+# Eseguo l'Analisi delle Componenti Principali (PCA) sui campioni
+pca <- prcomp(sr)
 
-# Predigo le prime due componenti principali per il 2017 e il 2023
-PCI <- predict(RGB_2017, PCA17, index = 1:2)
-PCI23 <- predict(RGB_2023, PCA23, index = 1:2)
+# Mostro un riepilogo della varianza spiegata dalla PCA
+summary(pca)
 
-# Plot della prima componente principale predetta per il 2017 e il 2023
-plot(PCI[[1]], main= "2017")
-plot(PCI23[[1]], main= "2023")
+# Traccio un grafico delle componenti principali per mostrare la correlazione con le bande originali
+plot(pca)
 
-# Converto le prime componenti principali predette in un frame di dati
-PC_fin <- as.data.frame(PCI[[1]], xy = T)
-PC_fin23 <- as.data.frame(PCI23[[1]], xy = T)
+# Predico le prime due componenti principali per l'intero raster "box"
+pci <- predict(box, pca, index = 1:2)
 
-# Plot con ggplot della prima componente principale predetta per il 2017
-plot_PCA <- ggplot()+
-  geom_raster(PC_fin, mapping = aes(x = x, y = y, fill = PC1))+
-  scale_fill_viridis(option = "viridis") +
-  labs(title = "PCI1 2017")
+# Traccio un grafico della prima componente principale con una scala di colori specifica
+plot(pci[[1]], col = cl)
 
-# Plot con ggplot della prima componente principale predetta per il 2023
-plot_PCA23 <- ggplot()+
-  geom_raster(PC_fin23, mapping = aes(x = x, y = y, fill = PC1))+
-  scale_fill_viridis(option = "viridis", direction = -1) +
-  labs(title = "PCI1 2023")
+# Converto la prima componente principale in un data frame con coordinate
+pc_final <- as.data.frame(pci[[1]], xy = TRUE)
 
-# Stampo i plot 
-print(plot_PCA)
-print(plot_PCA23)
+# Visualizzo la mappa della prima componente principale utilizzando ggplot con la scala di colori "inferno" di viridis
+ggplot() + 
+  geom_raster(pc_final, mapping = aes(x = x, y = y, fill = PC1)) + 
+  scale_fill_viridis(option = "inferno")
 
-# Maggior variabilità = valore PC1 più basso
-# Minor variabilità   = valore PC1 più alto
+# Chiudo il dispositivo grafico
+dev.off()
 
 # Esporto 
-png("PCA2017.png")
-ggplot()+
-  geom_raster(PC_fin, mapping = aes(x = x, y = y, fill = PC1))+
-  scale_fill_viridis(option = "viridis") +
-  labs(title = "PCI1 2017")
+png("PCA.png")
+ggplot() + 
+  geom_raster(pc_final, mapping = aes(x = x, y = y, fill = PC1)) + 
+  scale_fill_viridis(option = "inferno")
 dev.off()
 
-png("PCA2023.png")
-ggplot()+
-  geom_raster(PC_fin23, mapping = aes(x = x, y = y, fill = PC1))+
-  scale_fill_viridis(option = "viridis", direction = -1) +
-  labs(title = "PCI1 2023")
+# La visualizzazione con ggplot aiuta a comprendere come la variazione catturata
+# dal primo componente principale è distribuita nell'area di studio, basandosi 
+# sulle differenze negli indici di input.
+# La mia PCA sembra indicare che dove i valori sono molto bassi, 
+# la situazione in termini di copertura nevosa è cambiata significativamente. 
+# Man mano che i valori aumentano, si prevede che la situazione cambi meno
+
+# bassi valori PC1 -> alta variabilità
+# alti valori PC1 -> bassa variabilità
+
+
+
+################ 4. CLASSIFICAZIONE NDSI ################
+
+# Estraggo i valori continui dal raster NDSI del 2017
+singlenr1 <- getValues(NDSI17_n)
+
+# Visualizzo i valori estratti
+singlenr1
+
+# Imposto il seed per la riproducibilità dei risultati
+set.seed(99)
+
+# Eseguo la classificazione k-means con 2 centri (cluster)
+kcluster1 <- kmeans(singlenr1, centers = 2)
+
+# Visualizzo i risultati della classificazione k-means
+kcluster1
+
+# Riassegno i valori del raster ai cluster ottenuti
+NDSI_17_class <- setValues(NDSI17_n, kcluster1$cluster)
+
+# Calcolo le frequenze dei valori classificati nel raster
+frequencies17 <- freq(NDSI_17_class)
+
+# Calcolo il numero totale di celle nel raster classificato
+tot1 = ncell(NDSI_17_class)
+
+# Calcolo le percentuali delle frequenze rispetto al totale delle celle
+percentages1 = frequencies17 * 100 / tot1
+
+# Visualizzo le percentuali calcolate
+percentages1
+
+
+# Altro = 73.82667
+# Neve = 26.17333
+
+# ripeto per NDSI23_n
+singlenr2 <- getValues(NDSI23_n)
+singlenr2
+set.seed(99)
+kcluster2 <- kmeans(singlenr2, centers = 2)
+kcluster2
+NDSI_23_class <- setValues(NDSI23_n, kcluster2$cluster)
+
+frequencies23 <- freq(NDSI_23_class)
+tot2 = ncell(NDSI_23_class)
+percentages2 = frequencies23 * 100 / tot2
+percentages2
+
+# Altro =  80.03556
+# Neve= 19.96444
+
+# Ripeto per NDSI_diff_n
+singlenrd <- getValues(NDSI_diff_n)
+singlenrd
+set.seed(99)
+
+kclusterd <- kmeans(singlenrd, centers = 2)
+kclusterd
+NDSI_diff_class <- setValues(NDSI_diff_n, kclusterd$cluster)
+
+frequenciesNDSId <- freq(NDSI_diff_class)
+totd = ncell(NDSI_diff_class)
+percentagesd = frequenciesNDSId * 100 / tot1
+percentagesd
+
+# Altro= 86.54667
+# Neve= 13.45333
+
+# Plot
+par(mfrow = c(1,3),bg="gray",bty = "n")
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_17_class, col= cl1,
+     legend = FALSE,
+     main = "SNOW in 2017",
+     sub = "NDSI 2017",
+     xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
+
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_23_class, col= cl1,
+     legend = FALSE,
+     main = "SNOW in 2017",
+     sub = "NDSI 2017",
+     xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
+
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_diff_class, col= cl1,
+     legend = FALSE,
+     main = "SNOW in 2017",
+     sub = "NDSI 2017",
+     xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Perdita", "Non Perdita"), fill = c("black", "white"))
 dev.off()
 
-################ 4. CLASSIFICAZIONE - LAND COVER ################
-# 2017
-# 1. Trasformare l'immagine in serie di valori continui con funzione
-# getValues
-singlenr17 <- getValues(NDSI17)
-singlenr17
+# Grafico percentuali
+# Dati delle percentuali di neve
+data <- data.frame(
+  Anno = c("2017", "2023", "perdita"),
+  Percentuale_Neve = c(26.17333, 19.96444, 13.45333))
 
-# 2. Classificazione con funzione:
-# kmeans
-kcluster17 <- kmeans(singlenr17, centers = 2)
-kcluster17
+# Creo il grafico con ggplot
+ggplot(data, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
+         geom_bar(stat = "identity", position = "dodge") +
+         labs(title = "Percentuale di neve tra il 2017 e il 2023",
+              x = "Anno",
+              y = "Percentuale di neve",
+              fill = "Anno") +
+  scale_fill_brewer(palette = "Set3") +
+         theme_minimal()
 
-# 3. Riassegnare le classi a un nuovo raster con funzione:
-# setValues
-gcclass17 <- setValues(NDSI17[[1]], kcluster17$cluster) 
-
-cl1 <- colorRampPalette(c('yellow','black','red'))(100)
-gc17 <- plot(gcclass17, col=cl1, main= "2017")
-print(gc17)
-
-# GIALLO = neve
-# ROSSO = altro
-
-# Informazioni
-gcclass17
-
-# Calcolo percentuali 
-frequencies17 <- freq(gcclass17)
-tot = 475449
-percentages17 = frequencies17 * 100 /  tot
-percentages17
-# Neve = 15.00245 %
-# Altro = 84.99755 %
-
-# 2023
-# 1. Trasformare l'immagine in serie di valori continui con funzione
-# getValues
-singlenr23 <- getValues(NDSI23)
-singlenr23
-
-# 2. Classificazione con funzione:
-# kmeans
-kcluster23 <- kmeans(singlenr23, centers = 2)
-kcluster23
-
-# 3. Riassegnare le classi a un nuovo raster con funzione:
-# setValues
-gcclass23 <- setValues(NDSI23[[1]], kcluster23$cluster) 
-
-cl <- colorRampPalette(c('red','black','yellow'))(100)
-gc23 <- plot(gcclass23, col=cl, main= "2023")
-print(gc23)
-
-# GIALLO = neve
-# ROSSO = altro
-
-# Calcolo percentuali 
-frequencies23 <- freq(gcclass23)
-tot = 475449
-percentages23 = frequencies23 * 100 /  tot
-percentages23
-# value     count
-# Neve = 8.014319 %
-# Altro = 91.985681 %
-
-
-# Esporto immagini
-png("2017.png") #2017
-plot(gcclass17, col=cl1, main= "2017")
+# Esporto tutto
+# Export del plot per NDSI 2017
+png("NDSI_17_class.png")
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_17_class, col= cl1, legend = FALSE, main = "SNOW in 2017", sub = "NDSI 2017", xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
 dev.off()
 
-png("2023.png") #2023
-plot(gcclass23, col=cl, main= "2023")
+# Export del plot per NDSI 2023
+png("NDSI_23_class.png")
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_23_class, col= cl1, legend = FALSE, main = "SNOW in 2023", sub = "NDSI 2023", xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
 dev.off()
 
-# Creo un frame di dati con le percentuali solo per la categoria "Neve"
-dati_neve <- data.frame(
-  Anno = c("2017", "2023"),
-  Percentuale_Neve = c(15.00245, 8.014319))
-
-# Grafico a barre utilizzando ggplot
-grafico_neve <- ggplot(data = dati_neve, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
-  geom_bar(stat = "identity", position = "dodge") +  # Barre divise per anno
-  labs(x = "Anno", y = "Percentuale di Neve", title = "Confronto Percentuale di Neve tra 2017 e 2023") +  # Etichette degli assi e titolo
-  theme_minimal() +  # Stile del grafico
-  scale_fill_manual(values = c("2017" = "lightblue", "2023" = "lightgreen"))  # Colori per gli anni
-
-# Grafico
-print(grafico_neve)
-
-# Esporto il grafico
-png("percentuale neve.png")
-ggplot(data = dati_neve, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
-  geom_bar(stat = "identity", position = "dodge") +  
-  labs(x = "Anno", y = "Percentuale di Neve", title = "Confronto Percentuale di Neve tra 2017 e 2023") +  
-  theme_minimal() +  
-  scale_fill_manual(values = c("2017" = "lightblue", "2023" = "lightgreen"))
+# Export del plot per la differenza NDSI
+png("NDSI_diff_class.png")
+cl1 <- colorRampPalette(c("white", "black"))(2)
+plot(NDSI_diff_class, col= cl1, legend = FALSE, main = "SNOW Difference", sub = "NDSI Difference", xaxt= "n", yaxt="n")
+legend("bottom", legend = c("Perdita", "Non Perdita"), fill = c("black", "white"))
 dev.off()
+
+# Export del grafico
+png("grafico.png")
+ggplot(data, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Percentuale di neve tra il 2017 e il 2023",
+       x = "Anno",
+       y = "Percentuale di neve",
+       fill = "Anno") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+dev.off()
+
