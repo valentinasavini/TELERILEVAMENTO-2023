@@ -39,7 +39,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{\textbf{Obiettivi dello studio}}
 \begin{itemize}
     \item Acquisizione di immagini satellitari \textbf{Sentinel 2} (2017-2023)
-    \item \pause Calcolo dell'indice spettrale \textbf{NDSI} utilizzando R
+    \item \pause Calcolo degli indici spettrali \textbf{NDSI} e \textbf{SWI} utilizzando R
     \item \pause Verifica della presenza di variazioni significative: differenze della \textbf{percentuale di neve} tra il 2017 e 2023
 \end{itemize}
 \end{frame}
@@ -57,9 +57,9 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{\textbf{Materiali e Metodi}}
 \begin{itemize}
     \item Importazione e visualizzazione delle immagini \textbf{Sentinel 2}
-    \item \pause Calcolo e visualizzazione dell' \textbf{indice spettrale}
+    \item \pause Calcolo e visualizzazione degli \textbf{indici spettrali}
     \item \pause \textbf{PCA}: \textit{Principal Component Analysis}
-    \item \pause \textbf{Land cover} - percentuale di neve
+    \item \pause \textbf{Snow cover} - percentuale di neve
 \end{itemize}
 \end{frame}
 
@@ -83,7 +83,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{\textbf{Area di studio}}
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{marmolada2017.png}
+    \includegraphics[width=1\textwidth]{area_di_studio.png}
     \caption{Area di studio}
     \label{fig:enter-label}
 \end{figure}
@@ -94,7 +94,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{marmolada 2017.png}
+    \includegraphics[width=1\textwidth]{2017.png}
     \caption{2017 - Colori reali}
     \label{fig:enter-label}
 \end{figure}
@@ -102,7 +102,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{SWIR 2017.png}
+    \includegraphics[width=1\textwidth]{SWIR_2017.png}
     \caption{2017 - SWIR}
     \label{fig:enter-label}
 \end{figure}
@@ -115,7 +115,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{marmolada 2023.png}
+    \includegraphics[width=1\textwidth]{2023.png}
     \caption{2023 - Colori reali}
     \label{fig:enter-label}
 \end{figure}
@@ -123,7 +123,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{SWIR 2023.png}
+    \includegraphics[width=1\textwidth]{SWIR_2023.png}
     \caption{2023 - SWIR}
     \label{fig:enter-label}
 \end{figure}
@@ -131,28 +131,33 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{columns}
 \end{frame}
 
-\subsection{Calcolo e visualizzazione dell'indice spettrale - NDSI}
+\subsection{Calcolo e visualizzazione degli indici spettrali}
 
-\begin{frame}{\textbf{Calcolo e visualizzazione dell'indice spettrale}}
+\begin{frame}{\textbf{Calcolo e visualizzazione degli indici spettrali}}
 \begin{itemize}
-    \item Scelta dell'indice spettrale
-    \item \pause Calcolo dell'indice spettrale
-    \item \pause Calcolo della differenza dell'indice fra il 2017 e 2023 
+    \item Scelta degli indici spettrali
+    \item \pause Calcolo degli indici spettrali
+    \item \pause Calcolo della differenza degli indici fra il 2017 e 2023 
     \item \pause Plot dei risultati
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\textbf{Scelta dell'indice spettrale}}
+\begin{frame}{\textbf{Scelta degli indici spettrali}}
 \begin{itemize}
     \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}): utilizza le bande del \textbf{verde} e del \textbf{SWIR} per identificare e mappare la presenza di neve dalle immagini satellitari
+    \item \textbf{SWI} (\textit{Snow Water Index}): fornisce un chiaro contrasto tra la neve e altri tipi di caratteristiche, inclusi i corpi d'acqua
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\textbf{Calcolo dell'indice spettrale}}
+\begin{frame}{\textbf{Calcolo degli indici spettrali}}
 \begin{itemize}
     \item \textbf{NDSI} (\textit{Normalized Difference Snow Index}):
     \begin{equation}
         NDSI = \frac{\text{verde} - \text{SWIR}}{\text{verde} + \text{SWIR}}
+    \end{equation}
+    \item \textbf{SWI} (\textit{Snow Water Inder}):
+    \begin{equation}
+        SWI= \frac{\text{Green} * (\text{NIR} - \text{SWIR})}{(\text{Green} + \text{NIR}) * (\text{NIR} + \text{SWIR})}
     \end{equation}
 \end{itemize}
 \end{frame}
@@ -162,13 +167,13 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
     \begin{column}{0.5\textwidth}
         \begin{figure}
             \centering
-            \includegraphics[width=0.5\textwidth]{indice_NDSI_2017.png}
+            \includegraphics[width=0.5\textwidth]{NDSI_2017.png}
             \caption{NDSI 2017}
             \label{fig:enter-label}
         \end{figure}
         \begin{figure}
             \centering
-            \includegraphics[width=0.5\textwidth]{indice_NDSI_2023.png}
+            \includegraphics[width=0.5\textwidth]{NDSI_2023.png}
             \caption{NDSI 2023}
             \label{fig:enter-label}
         \end{figure}
@@ -176,8 +181,35 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
     \begin{column}{0.5\textwidth}
         \begin{figure}
             \centering
-            \includegraphics[width=1\textwidth]{indice_NDSI_diff.png}
+            \includegraphics[width=1\textwidth]{NDSI_diff.png}
             \caption{NDSI - differenza fra 2017 e 2023}
+            \label{fig:enter-label}
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{\textbf{Plot dell'indice spettrale: SWI 2017-2023}}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=0.5\textwidth]{SWI_2017.png}
+            \caption{SWI 2017}
+            \label{fig:enter-label}
+        \end{figure}
+        \begin{figure}
+            \centering
+            \includegraphics[width=0.5\textwidth]{SWI_2023.png}
+            \caption{SWI 2023}
+            \label{fig:enter-label}
+        \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\textwidth]{SWI_diff.png}
+            \caption{SWI - differenza fra 2017 e 2023}
             \label{fig:enter-label}
         \end{figure}
     \end{column}
@@ -200,24 +232,12 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \end{frame}
 
 \begin{frame}{\textbf{PCA: Principal Component Analysis}}
-\begin{columns}
-\begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{PCA2017.png}
-    \caption{2017 - PCA}
+    \includegraphics[width=0.6\textwidth]{PCA.png}
+    \caption{PCA}
     \label{fig:enter-label}
 \end{figure}
-\end{column}
-\begin{column}{0.5\textwidth}
-\begin{figure}
-    \centering
-    \includegraphics[width=1\textwidth]{PCA2023.png}
-    \caption{2023 - PCA}
-    \label{fig:enter-label}
-\end{figure}
-\end{column}
-\end{columns}
 \end{frame}
 
 \subsection{\textit{Land cover - percentuale neve}}
@@ -236,14 +256,14 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{2017.png}
+    \includegraphics[width=1\textwidth]{classificazione2017.png}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{2023.png}
+    \includegraphics[width=1\textwidth]{classificazione2023.png}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
@@ -262,9 +282,9 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{\textbf{Percentuale neve persa}}
 \textbf{Tenendo in considerazione che l'indice NDSI analizza la presenza di neve e non lo spessore:}
 \begin{itemize}
-    \item Nel 2017 secondo lo studio la percentuale di neve occupava il 15\% dell'area esaminata
-    \item Nel 2023 secondo lo studio la percentuale di neve occupava l'8\% dell'area esaminata
-    \item Con una perdita del 7\% nell'area esaminata
+    \item Nel 2017 secondo lo studio la percentuale di neve occupava il 23\% dell'area esaminata
+    \item Nel 2023 secondo lo studio la percentuale di neve occupava l'18\% dell'area esaminata
+    \item Con una perdita del 5\% nell'area esaminata
 \end{itemize}
 \end{frame}
 
