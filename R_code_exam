@@ -7,7 +7,7 @@
 # 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI 
 # 2. CALCOLO E PLOT INDICI SPETTRALI
 # 3. PCA
-# 4. LAND COVER
+# 4. CLASSIFICAZIONE
 
 
 # Installo i pacchetti di interesse
@@ -76,41 +76,6 @@ marm2023
 # X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B8A_.Raw
 
 
-# Ritaglio sull'area di interesse
-ext <- c(1318500, 1323000, 5850000, 5852000) #creo vettore contente le coordinate di interesse
-
-# 2017
-marm17 <- crop(marm2017, ext) # taglio l'area d'interesse
-marm17
-# class      : RasterBrick 
-# dimensions : 250, 475, 118750, 5  (nrow, ncol, ncell, nlayers)
-# resolution : 20.00466, 20.01476  (x, y)
-# extent     : 1315495, 1324997, 5848993, 5853996  (xmin, xmax, ymin, ymax)
-# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# source     : memory
-# names      : X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B02_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B03_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B04_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B11_.Raw., X2017.08.27.00_00_2017.08.27.23_59_Sentinel.2_L2A_B8A_.Raw. 
-# min values :                                                      0.0000,                                                      0.0000,                                                      0.0000,                                                      0.0058,                                                      0.0000 
-# max values :                                                      1.1976,                                                      1.2184,                                                      1.2528,                                                      1.5527,                                                      1.3427 
-
-# 2023
-marm23 <- crop(marm2023, ext) # taglio l'area d'interesse
-marm23
-# class      : RasterBrick 
-# dimensions : 250, 475, 118750, 5  (nrow, ncol, ncell, nlayers)
-# resolution : 20.00466, 20.01476  (x, y)
-# extent     : 1315495, 1324997, 5848993, 5853996  (xmin, xmax, ymin, ymax)
-# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
-# source     : memory
-# names      : X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B02_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B03_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B04_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B11_.Raw., X2023.08.11.00_00_2023.08.11.23_59_Sentinel.2_L2A_B8A_.Raw. 
-# min values :                                                      0.0000,                                                      0.0000,                                                      0.0000,                                                      0.0048,                                                      0.0000 
-# max values :                                                      1.4000,                                                      1.5312,                                                      1.5736,                                                      1.6021,                                                      1.3963 
-
-
-# Visualizzo le bande
-plot(marm17)
-plot(marm23)
-dev.off()
-
 # Modifico i nomi dei layer considerando:
 # BANDA 2 =   blu
 # BANDA 3 = verde 
@@ -119,12 +84,48 @@ dev.off()
 # BANDA 8 = NIR 
 
 # 2017
-names(marm17) <- c("b_blu", "b_verde", "b_rosso","b_SWIR", "b_NIR" ) 
-names(marm17) # controllo
+names(marm2017) <- c("b_blu", "b_verde", "b_rosso","b_SWIR", "b_NIR" ) 
+names(marm2017) # controllo
 
 # 2023
-names(marm23) <- c("b_rossa", "b_verde", "b_blu", "b_SWIR", "b_NIR") 
-names(marm23) # controllo
+names(marm2023) <- c("b_rossa", "b_verde", "b_blu", "b_SWIR", "b_NIR") 
+names(marm2023) # controllo
+
+
+# Ritaglio sull'area di interesse
+ext <- c(1318500, 1323000, 5850000, 5852000) #creo vettore contente le coordinate di interesse
+
+# 2017
+marm17 <- crop(marm2017, ext) # taglio l'area d'interesse
+marm17
+# class      : RasterBrick 
+# dimensions : 100, 225, 22500, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 20.00466, 20.01476  (x, y)
+# extent     : 1318496, 1322997, 5849993, 5851995  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+# source     : memory
+# names      :  b_blu, b_verde, b_rosso, b_SWIR,  b_NIR 
+# min values : 0.0000,  0.0063,  0.0146, 0.0175, 0.0335 
+# max values : 1.1976,  1.2184,  1.2528, 1.5195, 1.3427
+
+
+# 2023
+marm23 <- crop(marm2023, ext) # taglio l'area d'interesse
+marm23
+# class      : RasterBrick 
+# dimensions : 100, 225, 22500, 5  (nrow, ncol, ncell, nlayers)
+# resolution : 20.00466, 20.01476  (x, y)
+# extent     : 1318496, 1322997, 5849993, 5851995  (xmin, xmax, ymin, ymax)
+# crs        : +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs 
+# source     : memory
+# names      : b_rossa, b_verde,  b_blu, b_SWIR,  b_NIR 
+# min values :  0.0051,  0.0104, 0.0151, 0.0159, 0.0257 
+# max values :  1.1488,  1.1136, 1.0968, 1.2324, 1.0954
+
+# Visualizzo le bande
+plot(marm17)
+plot(marm23)
+dev.off()
 
 
 # Plot immagini con colori naturali (funzione plotRGB())
