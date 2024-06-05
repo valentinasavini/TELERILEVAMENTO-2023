@@ -7,7 +7,7 @@
 # 1. IMPORTAZIONE E VISUALIZZAZIONE IMMAGINI 
 # 2. CALCOLO E PLOT INDICI SPETTRALI
 # 3. PCA
-# 4. SNOW COVER - CLASSIFICAZIONE
+# 4. LAND COVER
 
 
 # Installo i pacchetti di interesse
@@ -374,6 +374,9 @@ dev.off()
 
 ################ 4. CLASSIFICAZIONE NDSI ################
 
+################ 4. CLASSIFICAZIONE ################
+
+#### indice NDSI ####
 # Estraggo i valori continui dal raster NDSI del 2017
 singlenr1 <- getValues(NDSI17_n)
 
@@ -392,6 +395,28 @@ kcluster1
 # Riassegno i valori del raster ai cluster ottenuti
 NDSI_17_class <- setValues(NDSI17_n, kcluster1$cluster)
 
+
+
+# Ripeto per NDSI23_n
+singlenr2 <- getValues(NDSI23_n)
+singlenr2
+set.seed(99)
+kcluster2 <- kmeans(singlenr2, centers = 2)
+kcluster2
+NDSI_23_class <- setValues(NDSI23_n, kcluster2$cluster)
+
+
+# Ripeto per NDSI_diff_n
+singlenrd <- getValues(NDSI_diff_n)
+singlenrd
+set.seed(99)
+kclusterd <- kmeans(singlenrd, centers = 2)
+kclusterd
+NDSI_diff_class <- setValues(NDSI_diff_n, kclusterd$cluster)
+
+
+### CALCOLO LE FREQUENZE
+# NDSI17_n
 # Calcolo le frequenze dei valori classificati nel raster
 frequencies17 <- freq(NDSI_17_class)
 
@@ -403,118 +428,161 @@ percentages1 = frequencies17 * 100 / tot1
 
 # Visualizzo le percentuali calcolate
 percentages1
-
-
 # Altro = 73.82667
 # Neve = 26.17333
 
-# ripeto per NDSI23_n
-singlenr2 <- getValues(NDSI23_n)
-singlenr2
-set.seed(99)
-kcluster2 <- kmeans(singlenr2, centers = 2)
-kcluster2
-NDSI_23_class <- setValues(NDSI23_n, kcluster2$cluster)
-
+# Ripeto per NDSI23_n
 frequencies23 <- freq(NDSI_23_class)
 tot2 = ncell(NDSI_23_class)
 percentages2 = frequencies23 * 100 / tot2
 percentages2
-
 # Altro =  80.03556
 # Neve= 19.96444
 
 # Ripeto per NDSI_diff_n
-singlenrd <- getValues(NDSI_diff_n)
-singlenrd
-set.seed(99)
-
-kclusterd <- kmeans(singlenrd, centers = 2)
-kclusterd
-NDSI_diff_class <- setValues(NDSI_diff_n, kclusterd$cluster)
-
 frequenciesNDSId <- freq(NDSI_diff_class)
 totd = ncell(NDSI_diff_class)
 percentagesd = frequenciesNDSId * 100 / tot1
 percentagesd
-
 # Altro= 86.54667
 # Neve= 13.45333
 
-# Plot
-par(mfrow = c(1,3),bg="gray",bty = "n")
+
+
+
+#### Indice SWI ####
+# SWI17_n
+singlenr1 <- getValues(SWI17_n)
+singlenr1
+set.seed(99)
+kcluster1 <- kmeans(singlenr1, centers = 2)
+kcluster1
+SWI_17_class <- setValues(SWI17_n, kcluster1$cluster)
+
+# SWI23_n
+singlenr2 <- getValues(SWI23_n)
+singlenr2
+set.seed(99)
+kcluster2 <- kmeans(singlenr2, centers = 2)
+kcluster2
+SWI_23_class <- setValues(SWI23_n, kcluster2$cluster)
+
+# SWI_diff_n
+singlenrd <- getValues(SWI_diff_n)
+singlenrd
+set.seed(99)
+kclusterd <- kmeans(singlenrd, centers = 2)
+kclusterd
+SWI_diff_class <- setValues(SWI_diff_n, kclusterd$cluster)
+
+### CALCOLO LE FREQUENZE
+# SWI17_n
+frequencies17 <- freq(SWI_17_class)
+tot1 = ncell(SWI_17_class)
+percentages1 = frequencies17 * 100 / tot1
+percentages1
+# Altro = 75.69333
+# Neve = 24.30667
+
+# SWI23_n
+frequencies23 <- freq(SWI_23_class)
+tot2 = ncell(SWI_23_class)
+percentages2 = frequencies23 * 100 / tot2
+percentages2
+# Altro =  81.67111
+# Neve= 18.32889
+
+# SWI_diff_n
+frequenciesSWId <- freq(SWI_diff_class)
+totd = ncell(NDSI_diff_class)
+percentagesd = frequenciesSWId * 100 / tot1
+percentagesd
+# Altro= 88.53778
+# Neve= 11.46222
+
+
+#### EFFETTUO UNA MEDIA TRA I VALORI NDSI E SWI ###
+mean_snow17 <- (26.17333+24.30667)/2
+mean_snow23 <- (19.96444+18.32889)/2
+mean_snowdiff <- (13.45333+11.46222)/2
+
+
+# GRAFICO PERCENTUALE
+# Dati delle percentuali di neve
+data <- data.frame(
+  Anno = c("2017", "2023", "differenza"),
+  Percentuale_Neve = c(mean_snow17, mean_snow23, mean_snowdiff))
+
+# Creo il grafico con ggplot
+ggplot(data, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Percentuale di neve tra il 2017 e il 2023 - media tra NDSI e SWI",
+       x = "Anno",
+       y = "Percentuale di neve",
+       fill = "Anno") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+
+
+
+# VISUALIZZO ED ESPORTO GRAFICI
+# NDSI 2017
+png("NDSI_17_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
-plot(NDSI_17_class, col= cl1,
-     legend = FALSE,
-     main = "SNOW in 2017",
-     sub = "NDSI 2017",
+plot(NDSI_17_class, col= cl1, legend = FALSE, 
+     main = "SNOW in 2017", sub = "NDSI 2017", 
      xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
+dev.off()
 
+# NDSI 2023
+png("NDSI_23_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
-plot(NDSI_23_class, col= cl1,
-     legend = FALSE,
-     main = "SNOW in 2017",
-     sub = "NDSI 2017",
+plot(NDSI_23_class, col= cl1, legend = FALSE, 
+     main = "SNOW in 2023", sub = "NDSI 2023", 
      xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
+dev.off()
 
+# differenza NDSI
+png("NDSI_diff_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
-plot(NDSI_diff_class, col= cl1,
-     legend = FALSE,
-     main = "SNOW in 2017",
-     sub = "NDSI 2017",
+plot(NDSI_diff_class, col= cl1, legend = FALSE, 
+     main = "SNOW Difference", sub = "NDSI Difference", 
      xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Perdita", "Non Perdita"), fill = c("black", "white"))
 dev.off()
 
-# Grafico percentuali
-# Dati delle percentuali di neve
-data <- data.frame(
-  Anno = c("2017", "2023", "perdita"),
-  Percentuale_Neve = c(26.17333, 19.96444, 13.45333))
-
-# Creo il grafico con ggplot
-ggplot(data, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
-         geom_bar(stat = "identity", position = "dodge") +
-         labs(title = "Percentuale di neve tra il 2017 e il 2023",
-              x = "Anno",
-              y = "Percentuale di neve",
-              fill = "Anno") +
-  scale_fill_brewer(palette = "Set3") +
-         theme_minimal()
-
-# Esporto tutto
-# Export del plot per NDSI 2017
-png("NDSI_17_class.png")
+# SWI 2017
+png("SWI_17_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
 plot(NDSI_17_class, col= cl1, legend = FALSE, main = "SNOW in 2017", sub = "NDSI 2017", xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
 dev.off()
 
-# Export del plot per NDSI 2023
-png("NDSI_23_class.png")
+# SWI 2023
+png("SWI_23_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
 plot(NDSI_23_class, col= cl1, legend = FALSE, main = "SNOW in 2023", sub = "NDSI 2023", xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Non-Snow", "Snow"), fill = c("black", "white"))
 dev.off()
 
-# Export del plot per la differenza NDSI
-png("NDSI_diff_class.png")
+# differenza SWI
+png("SWI_diff_class.png")
 cl1 <- colorRampPalette(c("white", "black"))(2)
 plot(NDSI_diff_class, col= cl1, legend = FALSE, main = "SNOW Difference", sub = "NDSI Difference", xaxt= "n", yaxt="n")
 legend("bottom", legend = c("Perdita", "Non Perdita"), fill = c("black", "white"))
 dev.off()
 
-# Export del grafico
+# Grafico percentuali
 png("grafico.png")
 ggplot(data, aes(x = Anno, y = Percentuale_Neve, fill = Anno)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Percentuale di neve tra il 2017 e il 2023",
+  labs(title = "Percentuale di neve tra il 2017 e il 2023 - media tra NDSI e SWI",
        x = "Anno",
        y = "Percentuale di neve",
        fill = "Anno") +
   scale_fill_brewer(palette = "Set3") +
   theme_minimal()
 dev.off()
-
