@@ -234,57 +234,92 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 \begin{frame}{\textbf{PCA: Principal Component Analysis}}
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{PCA.png}
+    \includegraphics[width=0.7\textwidth]{PCA.png}
     \caption{PCA}
     \label{fig:enter-label}
 \end{figure}
 \end{frame}
 
-\subsection{\textit{Land cover - percentuale neve}}
+\subsection{\textit{Snow cover - percentuale neve}}
 
-\begin{frame}{\textbf{Land Cover}}
+\begin{frame}{\textbf{Snow Cover}}
 \begin{itemize}
     \item Classificazione delle immagini Sentinel 2
-    \item \pause Calcolo delle frequenze e delle percentuali di \textit{land cover}
+    \item \pause Calcolo delle frequenze e delle percentuali di \textit{snow cover}
     \item \pause Creazione di un dataframe con i risultati ottenuti
     \item \pause Plot dei risultati
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\textbf{Land cover: risultati}}
+\begin{frame}{\textbf{Snow cover: risultati - 2017 vs 2023 (NDSI)}}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{classificazione2017.png}
+    \includegraphics[width=1\textwidth]{NDSI_17_class.png}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{classificazione2023.png}
+    \includegraphics[width=1\textwidth]{NDSI_23_class.png}
     \label{fig:enter-label}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
+\begin{frame}{\textbf{Snow cover: risultati - differenza NDSI}}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{NDSI_diff_class.png}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\textbf{Snow cover: risultati - 2017 vs 2023 (SWI)}}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{SWI_17_class.png}
+    \label{fig:enter-label}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{SWI_23_class.png}
+    \label{fig:enter-label}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{\textbf{Snow cover: risultati - differenza SWI}}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{SWI_diff_class.png}
+    \label{fig:enter-label}
+\end{figure}
+\end{frame}
+
 \begin{frame}{\textbf{Percentuale neve}}
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{percentuale neve.png}
+    \includegraphics[width=0.7\textwidth]{grafico.png}
     \caption{Percentuale neve}
     \label{fig:enter-label}
 \end{figure}
 \end{frame}
 
 \begin{frame}{\textbf{Percentuale neve persa}}
-\textbf{Tenendo in considerazione che l'indice NDSI analizza la presenza di neve e non lo spessore:}
+\textbf{Tenendo in considerazione che gli indice NDSI e SWI analizza la presenza di neve e non lo spessore:}
 \begin{itemize}
-    \item Nel 2017 secondo lo studio la percentuale di neve occupava il 23\% dell'area esaminata
-    \item Nel 2023 secondo lo studio la percentuale di neve occupava l'18\% dell'area esaminata
-    \item Con una perdita del 5\% nell'area esaminata
+    \item Nel 2017 secondo lo studio la percentuale di neve occupava il 25\% dell'area esaminata
+    \item Nel 2023 secondo lo studio la percentuale di neve occupava l'19\% dell'area esaminata
+    \item Con una perdita, secondo l'analisi temporale degli indici e la successiva classificazione,  del 12\% nell'area esaminata
 \end{itemize}
 \end{frame}
 
@@ -292,7 +327,7 @@ Monitoraggio dello scioglimento del Ghiacciaio della Marmolada
 
 \begin{frame}{\textbf{Conclusioni}}
 \begin{itemize}
-    \item Sono state rilevate \textbf{significative differenze} di \textit{land cover}
+    \item Sono state rilevate \textbf{significative differenze} di \textit{snow cover}
     \item \pause Tali differenze potrebbero essere principalmente dovute al \textbf{riscaldamento globale} 
     \item \pause Con la PCA sono state rilevate le zone all'interno dell'area di studio soggette a \textbf{maggior vulnerabilità}
     \item \pause L'analisi statistica di immagini satellitari in R rappresenta un potente strumento per il \textbf{monitoraggio Geo-Ecologico} e per un aumento della \textbf{sensibilizzazione}
