@@ -307,7 +307,9 @@ t_resultSWI
 #  mean difference 
 # 0.04445723 
 
-
+# Elimino le variabili usate per la normalizzazione
+rm(NDSI_17_max, NDSI_17_min, NDSI_23_max, NDSI_23_min, NDSI_diff_max, NDSI_diff_min)
+rm(SWI_17_max,SWI_17_min, SWI_23_max, SWI_23_min, SWI_diff_max, SWI_diff_min)
 
 ################ 3. PCA ################
 # PCA (Principal Component Analysis)
@@ -375,12 +377,11 @@ dev.off()
 
 
 
+################ 4. CLASSIFICAZIONE NDSI ################
+
 ################ 4. CLASSIFICAZIONE ################
 
-################ a. NDSI ################
-
 #### indice NDSI ####
-# NDSI17_n
 # Estraggo i valori continui dal raster NDSI del 2017
 singlenr1 <- getValues(NDSI17_n)
 
@@ -401,7 +402,7 @@ NDSI_17_class <- setValues(NDSI17_n, kcluster1$cluster)
 
 
 
-# NDSI23_n
+# Ripeto per NDSI23_n
 singlenr2 <- getValues(NDSI23_n)
 singlenr2
 set.seed(99)
@@ -410,7 +411,7 @@ kcluster2
 NDSI_23_class <- setValues(NDSI23_n, kcluster2$cluster)
 
 
-# NDSI_diff_n
+# Ripeto per NDSI_diff_n
 singlenrd <- getValues(NDSI_diff_n)
 singlenrd
 set.seed(99)
@@ -435,7 +436,7 @@ percentages1
 # Altro = 73.82667
 # Neve = 26.17333
 
-# NDSI23_n
+# Ripeto per NDSI23_n
 frequencies23 <- freq(NDSI_23_class)
 tot2 = ncell(NDSI_23_class)
 percentages2 = frequencies23 * 100 / tot2
@@ -443,7 +444,7 @@ percentages2
 # Altro =  80.03556
 # Neve= 19.96444
 
-# NDSI_diff_n
+# Ripeto per NDSI_diff_n
 frequenciesNDSId <- freq(NDSI_diff_class)
 totd = ncell(NDSI_diff_class)
 percentagesd = frequenciesNDSId * 100 / tot1
@@ -452,8 +453,9 @@ percentagesd
 # Neve= 13.45333
 
 
-################ b. SWI ################
 
+
+#### Indice SWI ####
 # SWI17_n
 singlenr1 <- getValues(SWI17_n)
 singlenr1
